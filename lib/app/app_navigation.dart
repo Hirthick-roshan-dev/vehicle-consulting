@@ -4,6 +4,7 @@ import '../core/theme/app_colors.dart';
 import '../features/auth/provider/auth_provider.dart';
 import '../features/completed_vehicles/screen/completed_vehicles_screen.dart';
 import '../features/profile/screen/profile_screen.dart';
+import '../features/reports/screen/vehicles_report_screen.dart';
 import '../features/sales_vehicles/screen/sales_vehicles_screen.dart';
 import '../features/settings/screen/settings_screen.dart';
 
@@ -37,6 +38,13 @@ class _AppNavigationState extends ConsumerState<AppNavigation> {
           selectedIcon: Icons.task_alt,
           label: 'Completed Vehicles',
           body: const CompletedVehiclesScreen(),
+        ),
+      if (isAdmin)
+        _NavItem(
+          icon: Icons.analytics_outlined,
+          selectedIcon: Icons.analytics,
+          label: 'Vehicles Report',
+          body: const VehiclesReportScreen(),
         ),
       _NavItem(
         icon: Icons.person_outline,
