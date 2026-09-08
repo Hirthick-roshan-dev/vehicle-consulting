@@ -610,10 +610,10 @@ class _VehiclesReportScreenState extends ConsumerState<VehiclesReportScreen>
                 child: Text(
                   title,
                   style: const TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.bold,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
                     letterSpacing: 0.6,
-                    color: AppColors.secondaryText,
+                    color: Color(0xFF475569),
                   ),
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -638,7 +638,7 @@ class _VehiclesReportScreenState extends ConsumerState<VehiclesReportScreen>
                 child: Text(
                   value,
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 22,
                     fontWeight: FontWeight.w800,
                     color: valueColor,
                   ),
@@ -655,7 +655,7 @@ class _VehiclesReportScreenState extends ConsumerState<VehiclesReportScreen>
                   child: Text(
                     badgeText,
                     style: TextStyle(
-                      fontSize: 10,
+                      fontSize: 11,
                       fontWeight: FontWeight.bold,
                       color: badgeColor ?? AppColors.profit,
                     ),
@@ -664,36 +664,37 @@ class _VehiclesReportScreenState extends ConsumerState<VehiclesReportScreen>
               ],
             ],
           ),
-          const SizedBox(height: 2),
+          const SizedBox(height: 3),
           Text(
             subtitle,
             style: const TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.w500,
-              color: AppColors.secondaryText,
+              fontSize: 12.5,
+              fontWeight: FontWeight.w600,
+              color: Color(0xFF475569),
             ),
           ),
-          const Divider(height: 16, color: AppColors.border),
+          const Divider(height: 18, color: AppColors.border),
 
           // Sub-metrics
           ...metrics.map(
             (m) => Padding(
-              padding: const EdgeInsets.symmetric(vertical: 2.0),
+              padding: const EdgeInsets.symmetric(vertical: 3.5),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     m.label,
                     style: const TextStyle(
-                      fontSize: 11,
-                      color: AppColors.secondaryText,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF334155),
                     ),
                   ),
                   Text(
                     m.value,
                     style: TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 13.5,
+                      fontWeight: FontWeight.w700,
                       color: m.valueColor ?? AppColors.primaryText,
                     ),
                   ),
@@ -736,8 +737,8 @@ class _VehiclesReportScreenState extends ConsumerState<VehiclesReportScreen>
                   Text(
                     'Showing ${bundle.periodSalesItems.length} Sales Transactions in ${filter.period.displayName}',
                     style: const TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w800,
                       color: AppColors.primaryText,
                     ),
                   ),
@@ -852,8 +853,9 @@ class _VehiclesReportScreenState extends ConsumerState<VehiclesReportScreen>
                                     Text(
                                       '${item.vehicle.vehicleName} • Customer: ${item.sale.customerName}',
                                       style: const TextStyle(
-                                        fontSize: 11,
-                                        color: Color(0xFF475569),
+                                        fontSize: 12.5,
+                                        fontWeight: FontWeight.w600,
+                                        color: Color(0xFF334155),
                                       ),
                                       overflow: TextOverflow.ellipsis,
                                     ),
@@ -866,7 +868,7 @@ class _VehiclesReportScreenState extends ConsumerState<VehiclesReportScreen>
                                 flex: 2,
                                 child: Text(
                                   AppDateUtils.formatDisplay(item.saleDate),
-                                  style: const TextStyle(fontSize: 12, color: AppColors.primaryText),
+                                  style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.primaryText),
                                 ),
                               ),
 
@@ -878,12 +880,12 @@ class _VehiclesReportScreenState extends ConsumerState<VehiclesReportScreen>
                                   children: [
                                     Text(
                                       CurrencyUtils.format(item.vehicle.purchaseAmount),
-                                      style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
                                     ),
                                     if (item.vehicle.commissionAmount > 0)
                                       Text(
                                         '+${CurrencyUtils.format(item.vehicle.commissionAmount)} comm.',
-                                        style: const TextStyle(fontSize: 10, color: Color(0xFF64748B)),
+                                        style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Color(0xFF64748B)),
                                       ),
                                   ],
                                 ),
@@ -895,8 +897,8 @@ class _VehiclesReportScreenState extends ConsumerState<VehiclesReportScreen>
                                 child: Text(
                                   CurrencyUtils.format(item.totalExpenses),
                                   style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600,
                                     color: item.totalExpenses > 0
                                         ? const Color(0xFFD97706)
                                         : AppColors.secondaryText,
@@ -910,8 +912,8 @@ class _VehiclesReportScreenState extends ConsumerState<VehiclesReportScreen>
                                 child: Text(
                                   CurrencyUtils.format(item.sale.totalAmount),
                                   style: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
+                                    fontSize: 13.5,
+                                    fontWeight: FontWeight.w800,
                                     color: AppColors.primaryText,
                                   ),
                                 ),
@@ -935,15 +937,15 @@ class _VehiclesReportScreenState extends ConsumerState<VehiclesReportScreen>
                                           Text(
                                             CurrencyUtils.format(item.profitLoss),
                                             style: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.bold,
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.w800,
                                               color: isProfit ? AppColors.profit : AppColors.loss,
                                             ),
                                           ),
                                           Text(
                                             '${isProfit ? '+' : ''}${item.profitMarginPercent.toStringAsFixed(1)}% margin',
                                             style: TextStyle(
-                                              fontSize: 9,
+                                              fontSize: 11,
                                               fontWeight: FontWeight.bold,
                                               color: isProfit ? AppColors.profit : AppColors.loss,
                                             ),
@@ -962,7 +964,7 @@ class _VehiclesReportScreenState extends ConsumerState<VehiclesReportScreen>
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
                                       decoration: BoxDecoration(
                                         color: (item.balance <= 0
                                                 ? AppColors.profit
@@ -973,7 +975,7 @@ class _VehiclesReportScreenState extends ConsumerState<VehiclesReportScreen>
                                       child: Text(
                                         item.balance <= 0 ? 'Fully Paid' : 'Partial Paid',
                                         style: TextStyle(
-                                          fontSize: 10,
+                                          fontSize: 11,
                                           fontWeight: FontWeight.bold,
                                           color: item.balance <= 0
                                               ? AppColors.profit
@@ -981,15 +983,17 @@ class _VehiclesReportScreenState extends ConsumerState<VehiclesReportScreen>
                                         ),
                                       ),
                                     ),
-                                    if (item.balance > 0)
+                                    if (item.balance > 0) ...[
+                                      const SizedBox(height: 2),
                                       Text(
                                         'Bal: ${CurrencyUtils.format(item.balance)}',
                                         style: const TextStyle(
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.bold,
+                                          fontSize: 11.5,
+                                          fontWeight: FontWeight.w800,
                                           color: AppColors.partialPayment,
                                         ),
                                       ),
+                                    ],
                                   ],
                                 ),
                               ),
@@ -1051,8 +1055,8 @@ class _VehiclesReportScreenState extends ConsumerState<VehiclesReportScreen>
                   Text(
                     '${bundle.stockItems.length} Vehicles In Yard Inventory',
                     style: const TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w800,
                       color: AppColors.primaryText,
                     ),
                   ),
@@ -1151,8 +1155,9 @@ class _VehiclesReportScreenState extends ConsumerState<VehiclesReportScreen>
                           Text(
                             '${item.vehicle.vehicleName} (${item.vehicle.manufacturingYear}) • ${item.vehicle.ownerName}',
                             style: const TextStyle(
-                              fontSize: 11,
-                              color: Color(0xFF475569),
+                              fontSize: 12.5,
+                              fontWeight: FontWeight.w600,
+                              color: Color(0xFF334155),
                             ),
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -1165,7 +1170,7 @@ class _VehiclesReportScreenState extends ConsumerState<VehiclesReportScreen>
                       flex: 2,
                       child: Text(
                         AppDateUtils.formatDisplay(item.vehicle.purchaseDate),
-                        style: const TextStyle(fontSize: 12, color: AppColors.primaryText),
+                        style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.primaryText),
                       ),
                     ),
 
@@ -1175,7 +1180,7 @@ class _VehiclesReportScreenState extends ConsumerState<VehiclesReportScreen>
                       child: Row(
                         children: [
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                             decoration: BoxDecoration(
                               color: isAging
                                   ? AppColors.loss.withValues(alpha: 0.1)
@@ -1185,7 +1190,7 @@ class _VehiclesReportScreenState extends ConsumerState<VehiclesReportScreen>
                             child: Text(
                               '${item.daysInStock} days',
                               style: TextStyle(
-                                fontSize: 11,
+                                fontSize: 11.5,
                                 fontWeight: FontWeight.bold,
                                 color: isAging ? AppColors.loss : AppColors.primary,
                               ),
@@ -1200,7 +1205,7 @@ class _VehiclesReportScreenState extends ConsumerState<VehiclesReportScreen>
                       flex: 2,
                       child: Text(
                         CurrencyUtils.format(item.vehicle.purchaseAmount),
-                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                        style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
                       ),
                     ),
 
@@ -1210,8 +1215,8 @@ class _VehiclesReportScreenState extends ConsumerState<VehiclesReportScreen>
                       child: Text(
                         CurrencyUtils.format(item.totalExpenses),
                         style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
                           color: item.totalExpenses > 0 ? const Color(0xFFD97706) : AppColors.secondaryText,
                         ),
                       ),
@@ -1223,8 +1228,8 @@ class _VehiclesReportScreenState extends ConsumerState<VehiclesReportScreen>
                       child: Text(
                         CurrencyUtils.format(item.totalInvested),
                         style: const TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
+                          fontSize: 13.5,
+                          fontWeight: FontWeight.w800,
                           color: AppColors.primaryText,
                         ),
                       ),
@@ -1314,24 +1319,34 @@ class _VehiclesReportScreenState extends ConsumerState<VehiclesReportScreen>
     Color? color,
     bool bold = false,
   }) {
-    return Row(
-      children: [
-        Text(
-          '$label: ',
-          style: const TextStyle(
-            fontSize: 12,
-            color: AppColors.secondaryText,
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            '$label: ',
+            style: const TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              color: Color(0xFF334155),
+            ),
           ),
-        ),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 12,
-            fontWeight: bold ? FontWeight.bold : FontWeight.w600,
-            color: color ?? AppColors.primaryText,
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 13.5,
+              fontWeight: FontWeight.bold,
+              color: color ?? AppColors.primaryText,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -1349,8 +1364,8 @@ class _KpiMetricRow {
 }
 
 const TextStyle _tableHeaderStyle = TextStyle(
-  fontSize: 11,
-  fontWeight: FontWeight.bold,
+  fontSize: 12,
+  fontWeight: FontWeight.w700,
   letterSpacing: 0.5,
-  color: Color(0xFF475569),
+  color: Color(0xFF334155),
 );

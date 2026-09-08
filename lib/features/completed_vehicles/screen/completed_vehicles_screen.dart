@@ -131,7 +131,57 @@ class _CompletedVehiclesScreenState extends ConsumerState<CompletedVehiclesScree
                   ),
                 ),
                 const SizedBox(width: 12),
+                // Period Filters: All, Weekly, Monthly
+                FilterChip(
+                  avatar: filter.period == CompletedPeriod.all
+                      ? null
+                      : const Icon(Icons.calendar_today_outlined, size: 14),
+                  label: const Text('All'),
+                  selected: filter.period == CompletedPeriod.all,
+                  onSelected: (_) {
+                    ref.read(completedVehicleFilterProvider.notifier).state =
+                        filter.copyWith(period: CompletedPeriod.all, page: 1);
+                  },
+                ),
+                const SizedBox(width: 6),
+                FilterChip(
+                  avatar: const Icon(Icons.view_week_outlined, size: 14),
+                  label: const Text('Weekly'),
+                  selected: filter.period == CompletedPeriod.weekly,
+                  onSelected: (sel) {
+                    ref.read(completedVehicleFilterProvider.notifier).state =
+                        filter.copyWith(
+                          period: sel ? CompletedPeriod.weekly : CompletedPeriod.all,
+                          page: 1,
+                        );
+                  },
+                ),
+                const SizedBox(width: 6),
+                FilterChip(
+                  avatar: const Icon(Icons.calendar_month_outlined, size: 14),
+                  label: const Text('Monthly'),
+                  selected: filter.period == CompletedPeriod.monthly,
+                  onSelected: (sel) {
+                    ref.read(completedVehicleFilterProvider.notifier).state =
+                        filter.copyWith(
+                          period: sel ? CompletedPeriod.monthly : CompletedPeriod.all,
+                          page: 1,
+                        );
+                  },
+                ),
+                const SizedBox(width: 12),
                 // Type Filter Chips
+                FilterChip(
+                  label: const Text('All Types'),
+                  selected: filter.typeFilter == null,
+                  onSelected: (_) {
+                    ref.read(completedVehicleFilterProvider.notifier).state = filter.copyWith(
+                      clearType: true,
+                      page: 1,
+                    );
+                  },
+                ),
+                const SizedBox(width: 6),
                 FilterChip(
                   label: const Text('2W'),
                   selected: filter.typeFilter == VehicleType.twoWheeler,
@@ -176,15 +226,15 @@ class _CompletedVehiclesScreenState extends ConsumerState<CompletedVehiclesScree
                     );
                   }
 
-                  // Financial Summary Cards for current view
-                  final totalSales = items.fold(0.0, (sum, i) => sum + i.sale.totalAmount);
-                  final totalCost = items.fold(0.0, (sum, i) => sum + i.totalCost);
-                  final totalNetPL = items.fold(0.0, (sum, i) => sum + i.profitLoss);
-                  final totalBalanceDue = items.fold(0.0, (sum, i) => sum + i.balance);
-
                   return Column(
                     children: [
-                      _buildSummaryBar(result.totalCount, totalSales, totalCost, totalNetPL, totalBalanceDue),
+                      _buildSummaryBar(
+                        result.totalCount,
+                        result.totalSales,
+                        result.totalCost,
+                        result.totalNetPL,
+                        result.totalBalanceDue,
+                      ),
                       const SizedBox(height: 16),
                       // Product Card Grid
                       Expanded(
@@ -313,7 +363,7 @@ class _CompletedVehiclesScreenState extends ConsumerState<CompletedVehiclesScree
         children: [
           Text(
             'Showing $startIdx - $endIdx of ${result.totalCount} records',
-            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFF475569)),
+            style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700, color: Color(0xFF334155)),
           ),
           Row(
             children: [
@@ -331,7 +381,7 @@ class _CompletedVehiclesScreenState extends ConsumerState<CompletedVehiclesScree
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Text(
                   'Page ${result.currentPage} of ${result.totalPages}',
-                  style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: AppColors.primaryText),
+                  style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w800, color: AppColors.primaryText),
                 ),
               ),
               IconButton(
@@ -354,13 +404,13 @@ class _CompletedVehiclesScreenState extends ConsumerState<CompletedVehiclesScree
   Widget _stat(String label, String value, {Color? color, bool isBold = false}) {
     return Column(
       children: [
-        Text(label, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF475569))),
+        Text(label, style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700, color: Color(0xFF334155))),
         const SizedBox(height: 4),
         Text(
           value,
           style: TextStyle(
-            fontSize: 15,
-            fontWeight: isBold ? FontWeight.bold : FontWeight.w600,
+            fontSize: 16,
+            fontWeight: isBold ? FontWeight.w800 : FontWeight.w700,
             color: color ?? AppColors.primaryText,
           ),
         ),

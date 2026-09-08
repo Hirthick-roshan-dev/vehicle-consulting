@@ -34,7 +34,7 @@ class CompletedVehicleCard extends StatelessWidget {
     Color statusColor = AppColors.profit;
     switch (vehicle.status) {
       case VehicleStatus.available:
-        statusColor = AppColors.primary;
+        statusColor = AppColors.forSale;
         break;
       case VehicleStatus.partialPayment:
         statusColor = const Color(0xFFEA580C);
@@ -224,12 +224,12 @@ class CompletedVehicleCard extends StatelessWidget {
                           children: [
                             const Text(
                               'Sale Price:',
-                              style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Color(0xFF475569)),
+                              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF334155)),
                             ),
                             Text(
                               CurrencyUtils.format(sale.totalAmount),
                               style: const TextStyle(
-                                fontSize: 12,
+                                fontSize: 13,
                                 fontWeight: FontWeight.bold,
                                 color: Color(0xFF059669),
                               ),
@@ -242,11 +242,11 @@ class CompletedVehicleCard extends StatelessWidget {
                           children: [
                             const Text(
                               'Paid Amount:',
-                              style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Color(0xFF475569)),
+                              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF334155)),
                             ),
                             Text(
                               CurrencyUtils.format(item.totalPaid),
-                              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.profit),
+                              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: AppColors.profit),
                             ),
                           ],
                         ),
@@ -256,13 +256,13 @@ class CompletedVehicleCard extends StatelessWidget {
                           children: [
                             const Text(
                               'Balance Due:',
-                              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.primaryText),
+                              style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w800, color: AppColors.primaryText),
                             ),
                             Text(
                               CurrencyUtils.format(item.balance),
                               style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.bold,
+                                fontSize: 13.5,
+                                fontWeight: FontWeight.w800,
                                 color: item.balance > 0 ? const Color(0xFFEA580C) : AppColors.profit,
                               ),
                             ),
@@ -276,19 +276,19 @@ class CompletedVehicleCard extends StatelessWidget {
                   // Customer & Date Details
                   Row(
                     children: [
-                      const Icon(Icons.person_pin, size: 14, color: AppColors.primary),
+                      const Icon(Icons.person_pin, size: 15, color: AppColors.primary),
                       const SizedBox(width: 4),
                       Expanded(
                         child: Text(
                           '${sale.customerName} (${sale.customerPhone})',
-                          style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Color(0xFF334155)),
+                          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Color(0xFF334155)),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       Text(
                         AppDateUtils.formatDisplay(sale.saleDate),
-                        style: const TextStyle(fontSize: 10, color: Color(0xFF64748B)),
+                        style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Color(0xFF475569)),
                       ),
                     ],
                   ),

@@ -20,7 +20,8 @@ class SalesVehiclesScreen extends ConsumerStatefulWidget {
   const SalesVehiclesScreen({super.key});
 
   @override
-  ConsumerState<SalesVehiclesScreen> createState() => _SalesVehiclesScreenState();
+  ConsumerState<SalesVehiclesScreen> createState() =>
+      _SalesVehiclesScreenState();
 }
 
 class _SalesVehiclesScreenState extends ConsumerState<SalesVehiclesScreen> {
@@ -43,10 +44,9 @@ class _SalesVehiclesScreenState extends ConsumerState<SalesVehiclesScreen> {
 
   void _onSearchChanged(String query) {
     ref.read(vehicleFilterProvider.notifier).setSearchQuery(query);
-    ref.read(vehicleProvider.notifier).loadSalesVehicles(
-          ref.read(vehicleFilterProvider),
-          page: 1,
-        );
+    ref
+        .read(vehicleProvider.notifier)
+        .loadSalesVehicles(ref.read(vehicleFilterProvider), page: 1);
   }
 
   @override
@@ -95,9 +95,13 @@ class _SalesVehiclesScreenState extends ConsumerState<SalesVehiclesScreen> {
                       builder: (ctx) => const AddVehicleDialog(),
                     );
                     if (newVehicle != null) {
-                      final success = await ref.read(vehicleProvider.notifier).addVehicle(newVehicle);
+                      final success = await ref
+                          .read(vehicleProvider.notifier)
+                          .addVehicle(newVehicle);
                       if (success) {
-                        ref.read(vehicleProvider.notifier).loadSalesVehicles(filterState);
+                        ref
+                            .read(vehicleProvider.notifier)
+                            .loadSalesVehicles(filterState);
                       }
                     }
                   },
@@ -115,7 +119,8 @@ class _SalesVehiclesScreenState extends ConsumerState<SalesVehiclesScreen> {
                     controller: _searchController,
                     onChanged: _onSearchChanged,
                     decoration: InputDecoration(
-                      hintText: 'Search by Vehicle No, Name, Model, or Owner...',
+                      hintText:
+                          'Search by Vehicle No, Name, Model, or Owner...',
                       prefixIcon: const Icon(Icons.search, size: 20),
                       suffixIcon: _searchController.text.isNotEmpty
                           ? IconButton(
@@ -136,8 +141,12 @@ class _SalesVehiclesScreenState extends ConsumerState<SalesVehiclesScreen> {
                   label: const Text('All Statuses'),
                   selected: filterState.statusFilter == null,
                   onSelected: (_) {
-                    ref.read(vehicleFilterProvider.notifier).setStatusFilter(null);
-                    ref.read(vehicleProvider.notifier).loadSalesVehicles(
+                    ref
+                        .read(vehicleFilterProvider.notifier)
+                        .setStatusFilter(null);
+                    ref
+                        .read(vehicleProvider.notifier)
+                        .loadSalesVehicles(
                           ref.read(vehicleFilterProvider),
                           page: 1,
                         );
@@ -148,8 +157,12 @@ class _SalesVehiclesScreenState extends ConsumerState<SalesVehiclesScreen> {
                   label: const Text('Available'),
                   selected: filterState.statusFilter == VehicleStatus.available,
                   onSelected: (sel) {
-                    ref.read(vehicleFilterProvider.notifier).setStatusFilter(sel ? VehicleStatus.available : null);
-                    ref.read(vehicleProvider.notifier).loadSalesVehicles(
+                    ref
+                        .read(vehicleFilterProvider.notifier)
+                        .setStatusFilter(sel ? VehicleStatus.available : null);
+                    ref
+                        .read(vehicleProvider.notifier)
+                        .loadSalesVehicles(
                           ref.read(vehicleFilterProvider),
                           page: 1,
                         );
@@ -158,10 +171,17 @@ class _SalesVehiclesScreenState extends ConsumerState<SalesVehiclesScreen> {
                 const SizedBox(width: 6),
                 FilterChip(
                   label: const Text('Partial Payment'),
-                  selected: filterState.statusFilter == VehicleStatus.partialPayment,
+                  selected:
+                      filterState.statusFilter == VehicleStatus.partialPayment,
                   onSelected: (sel) {
-                    ref.read(vehicleFilterProvider.notifier).setStatusFilter(sel ? VehicleStatus.partialPayment : null);
-                    ref.read(vehicleProvider.notifier).loadSalesVehicles(
+                    ref
+                        .read(vehicleFilterProvider.notifier)
+                        .setStatusFilter(
+                          sel ? VehicleStatus.partialPayment : null,
+                        );
+                    ref
+                        .read(vehicleProvider.notifier)
+                        .loadSalesVehicles(
                           ref.read(vehicleFilterProvider),
                           page: 1,
                         );
@@ -174,8 +194,12 @@ class _SalesVehiclesScreenState extends ConsumerState<SalesVehiclesScreen> {
                   label: const Text('All Types'),
                   selected: filterState.typeFilter == null,
                   onSelected: (_) {
-                    ref.read(vehicleFilterProvider.notifier).setTypeFilter(null);
-                    ref.read(vehicleProvider.notifier).loadSalesVehicles(
+                    ref
+                        .read(vehicleFilterProvider.notifier)
+                        .setTypeFilter(null);
+                    ref
+                        .read(vehicleProvider.notifier)
+                        .loadSalesVehicles(
                           ref.read(vehicleFilterProvider),
                           page: 1,
                         );
@@ -186,8 +210,12 @@ class _SalesVehiclesScreenState extends ConsumerState<SalesVehiclesScreen> {
                   label: const Text('2W'),
                   selected: filterState.typeFilter == VehicleType.twoWheeler,
                   onSelected: (sel) {
-                    ref.read(vehicleFilterProvider.notifier).setTypeFilter(sel ? VehicleType.twoWheeler : null);
-                    ref.read(vehicleProvider.notifier).loadSalesVehicles(
+                    ref
+                        .read(vehicleFilterProvider.notifier)
+                        .setTypeFilter(sel ? VehicleType.twoWheeler : null);
+                    ref
+                        .read(vehicleProvider.notifier)
+                        .loadSalesVehicles(
                           ref.read(vehicleFilterProvider),
                           page: 1,
                         );
@@ -198,8 +226,12 @@ class _SalesVehiclesScreenState extends ConsumerState<SalesVehiclesScreen> {
                   label: const Text('4W'),
                   selected: filterState.typeFilter == VehicleType.fourWheeler,
                   onSelected: (sel) {
-                    ref.read(vehicleFilterProvider.notifier).setTypeFilter(sel ? VehicleType.fourWheeler : null);
-                    ref.read(vehicleProvider.notifier).loadSalesVehicles(
+                    ref
+                        .read(vehicleFilterProvider.notifier)
+                        .setTypeFilter(sel ? VehicleType.fourWheeler : null);
+                    ref
+                        .read(vehicleProvider.notifier)
+                        .loadSalesVehicles(
                           ref.read(vehicleFilterProvider),
                           page: 1,
                         );
@@ -214,132 +246,180 @@ class _SalesVehiclesScreenState extends ConsumerState<SalesVehiclesScreen> {
               child: vehicleState.isLoading
                   ? const LoadingWidget(message: 'Loading vehicles...')
                   : vehicleState.errorMessage != null
-                      ? Center(
-                          child: Text(
-                            vehicleState.errorMessage!,
-                            style: const TextStyle(color: AppColors.loss),
-                          ),
-                        )
-                      : vehicleState.vehicles.isEmpty
-                          ? const EmptyState(
-                              title: 'No vehicles found',
-                              subtitle: 'Add a new vehicle or adjust your search filter.',
-                              icon: Icons.directions_car_outlined,
-                            )
-                          : Column(
-                              children: [
-                                Expanded(
-                                  child: GridView.builder(
-                                    itemCount: vehicleState.vehicles.length,
-                                    gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                                      maxCrossAxisExtent: 310,
-                                      mainAxisExtent: 420,
-                                      crossAxisSpacing: 16,
-                                      mainAxisSpacing: 16,
-                                    ),
-                                    itemBuilder: (context, index) {
-                                      final vehicle = vehicleState.vehicles[index];
-                                      final expensesTotal = vehicleState.vehicleExpensesMap[vehicle.id] ?? 0.0;
-
-                                      return VehicleCard(
-                                        vehicle: vehicle,
-                                        expensesTotal: expensesTotal,
-                                        onView: () {
-                                          Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                              builder: (ctx) => VehicleDetailsScreen(vehicleId: vehicle.id!),
-                                            ),
-                                          ).then((_) {
-                                            ref.read(vehicleProvider.notifier).loadSalesVehicles(
-                                                  ref.read(vehicleFilterProvider),
-                                                );
-                                          });
-                                        },
-                                        onEdit: () async {
-                                          final updated = await showDialog<VehicleModel>(
-                                            context: context,
-                                            builder: (ctx) => AddVehicleDialog(vehicleToEdit: vehicle),
-                                          );
-                                          if (updated != null) {
-                                            await ref.read(vehicleProvider.notifier).updateVehicle(updated);
-                                            ref.read(vehicleProvider.notifier).loadSalesVehicles(
-                                                  ref.read(vehicleFilterProvider),
-                                                );
-                                          }
-                                        },
-                                        onSell: vehicle.status == VehicleStatus.available
-                                            ? () async {
-                                                final result = await showDialog<SaleFormResult>(
-                                                  context: context,
-                                                  builder: (ctx) => SaleFormDialog(
-                                                    vehicleId: vehicle.id!,
-                                                    vehicleName: vehicle.vehicleName,
-                                                    vehicleNumber: vehicle.vehicleNumber,
-                                                  ),
-                                                );
-                                                if (result != null) {
-                                                  final now = DateTime.now().toIso8601String();
-                                                  await ref.read(salesRepositoryProvider).recordSale(
-                                                        sale: VehicleSaleModel(
-                                                          vehicleId: vehicle.id!,
-                                                          customerName: result.customerName,
-                                                          customerPhone: result.customerPhone,
-                                                          saleDate: result.saleDate,
-                                                          paymentType: result.paymentType,
-                                                          isEmi: result.isEmi,
-                                                          financeName: result.financeName,
-                                                          totalAmount: result.totalSaleAmount,
-                                                          documentCharges: result.documentCharges,
-                                                          notes: result.notes,
-                                                          createdAt: now,
-                                                          updatedAt: now,
-                                                        ),
-                                                        advanceAmount: result.advanceAmount,
-                                                        paymentMethod: result.paymentType,
-                                                      );
-                                                  ref.read(vehicleProvider.notifier).loadSalesVehicles(
-                                                        ref.read(vehicleFilterProvider),
-                                                      );
-                                                }
-                                              }
-                                            : null,
-                                        onDelete: () async {
-                                          final confirm = await showDialog<bool>(
-                                            context: context,
-                                            builder: (ctx) => AlertDialog(
-                                              title: const Text('Delete Vehicle?'),
-                                              content: Text(
-                                                'Are you sure you want to delete ${vehicle.vehicleNumber}? This will also remove associated expenses, sales, and payment history.',
-                                              ),
-                                              actions: [
-                                                TextButton(
-                                                  onPressed: () => Navigator.of(ctx).pop(false),
-                                                  child: const Text('Cancel'),
-                                                ),
-                                                ElevatedButton(
-                                                  style: ElevatedButton.styleFrom(backgroundColor: AppColors.loss),
-                                                  onPressed: () => Navigator.of(ctx).pop(true),
-                                                  child: const Text('Delete'),
-                                                ),
-                                              ],
-                                            ),
-                                          );
-                                          if (confirm == true) {
-                                            await ref.read(vehicleProvider.notifier).deleteVehicle(vehicle.id!);
-                                            ref.read(vehicleProvider.notifier).loadSalesVehicles(
-                                                  ref.read(vehicleFilterProvider),
-                                                );
-                                          }
-                                        },
-                                      );
-                                    },
-                                  ),
+                  ? Center(
+                      child: Text(
+                        vehicleState.errorMessage!,
+                        style: const TextStyle(color: AppColors.loss),
+                      ),
+                    )
+                  : vehicleState.vehicles.isEmpty
+                  ? const EmptyState(
+                      title: 'No vehicles found',
+                      subtitle:
+                          'Add a new vehicle or adjust your search filter.',
+                      icon: Icons.directions_car_outlined,
+                    )
+                  : Column(
+                      children: [
+                        Expanded(
+                          child: GridView.builder(
+                            itemCount: vehicleState.vehicles.length,
+                            gridDelegate:
+                                const SliverGridDelegateWithMaxCrossAxisExtent(
+                                  maxCrossAxisExtent: 310,
+                                  mainAxisExtent: 420,
+                                  crossAxisSpacing: 16,
+                                  mainAxisSpacing: 16,
                                 ),
-                                const SizedBox(height: 12),
-                                // Pagination Bar
-                                _buildPaginationBar(context, ref, vehicleState, filterState),
-                              ],
-                            ),
+                            itemBuilder: (context, index) {
+                              final vehicle = vehicleState.vehicles[index];
+                              final expensesTotal =
+                                  vehicleState.vehicleExpensesMap[vehicle.id] ??
+                                  0.0;
+
+                              return VehicleCard(
+                                vehicle: vehicle,
+                                expensesTotal: expensesTotal,
+                                onView: () {
+                                  Navigator.of(context)
+                                      .push(
+                                        MaterialPageRoute(
+                                          builder: (ctx) =>
+                                              VehicleDetailsScreen(
+                                                vehicleId: vehicle.id!,
+                                              ),
+                                        ),
+                                      )
+                                      .then((_) {
+                                        ref
+                                            .read(vehicleProvider.notifier)
+                                            .loadSalesVehicles(
+                                              ref.read(vehicleFilterProvider),
+                                            );
+                                      });
+                                },
+                                onEdit: () async {
+                                  final updated =
+                                      await showDialog<VehicleModel>(
+                                        context: context,
+                                        builder: (ctx) => AddVehicleDialog(
+                                          vehicleToEdit: vehicle,
+                                        ),
+                                      );
+                                  if (updated != null) {
+                                    await ref
+                                        .read(vehicleProvider.notifier)
+                                        .updateVehicle(updated);
+                                    ref
+                                        .read(vehicleProvider.notifier)
+                                        .loadSalesVehicles(
+                                          ref.read(vehicleFilterProvider),
+                                        );
+                                  }
+                                },
+                                onSell:
+                                    vehicle.status == VehicleStatus.available
+                                    ? () async {
+                                        final result =
+                                            await showDialog<SaleFormResult>(
+                                              context: context,
+                                              builder: (ctx) => SaleFormDialog(
+                                                vehicleId: vehicle.id!,
+                                                vehicleName:
+                                                    vehicle.vehicleName,
+                                                vehicleNumber:
+                                                    vehicle.vehicleNumber,
+                                              ),
+                                            );
+                                        if (result != null) {
+                                          final now = DateTime.now()
+                                              .toIso8601String();
+                                          await ref
+                                              .read(salesRepositoryProvider)
+                                              .recordSale(
+                                                sale: VehicleSaleModel(
+                                                  vehicleId: vehicle.id!,
+                                                  customerName:
+                                                      result.customerName,
+                                                  customerPhone:
+                                                      result.customerPhone,
+                                                  saleDate: result.saleDate,
+                                                  paymentType:
+                                                      result.paymentType,
+                                                  isEmi: result.isEmi,
+                                                  financeName:
+                                                      result.financeName,
+                                                  totalAmount:
+                                                      result.totalSaleAmount,
+                                                  documentCharges:
+                                                      result.documentCharges,
+                                                  notes: result.notes,
+                                                  createdAt: now,
+                                                  updatedAt: now,
+                                                ),
+                                                advanceAmount:
+                                                    result.advanceAmount,
+                                                paymentMethod:
+                                                    result.paymentType,
+                                              );
+                                          ref
+                                              .read(vehicleProvider.notifier)
+                                              .loadSalesVehicles(
+                                                ref.read(vehicleFilterProvider),
+                                              );
+                                        }
+                                      }
+                                    : null,
+                                onDelete: () async {
+                                  final confirm = await showDialog<bool>(
+                                    context: context,
+                                    builder: (ctx) => AlertDialog(
+                                      title: const Text('Delete Vehicle?'),
+                                      content: Text(
+                                        'Are you sure you want to delete ${vehicle.vehicleNumber}? This will also remove associated expenses, sales, and payment history.',
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.of(ctx).pop(false),
+                                          child: const Text('Cancel'),
+                                        ),
+                                        ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: AppColors.loss,
+                                          ),
+                                          onPressed: () =>
+                                              Navigator.of(ctx).pop(true),
+                                          child: const Text('Delete'),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                  if (confirm == true) {
+                                    await ref
+                                        .read(vehicleProvider.notifier)
+                                        .deleteVehicle(vehicle.id!);
+                                    ref
+                                        .read(vehicleProvider.notifier)
+                                        .loadSalesVehicles(
+                                          ref.read(vehicleFilterProvider),
+                                        );
+                                  }
+                                },
+                              );
+                            },
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        // Pagination Bar
+                        _buildPaginationBar(
+                          context,
+                          ref,
+                          vehicleState,
+                          filterState,
+                        ),
+                      ],
+                    ),
             ),
           ],
         ),
@@ -353,7 +433,9 @@ class _SalesVehiclesScreenState extends ConsumerState<SalesVehiclesScreen> {
     VehicleState state,
     VehicleFilterState filter,
   ) {
-    final startIdx = state.totalCount == 0 ? 0 : (state.currentPage - 1) * state.pageSize + 1;
+    final startIdx = state.totalCount == 0
+        ? 0
+        : (state.currentPage - 1) * state.pageSize + 1;
     final endIdx = min(state.currentPage * state.pageSize, state.totalCount);
 
     return Container(
@@ -368,7 +450,11 @@ class _SalesVehiclesScreenState extends ConsumerState<SalesVehiclesScreen> {
         children: [
           Text(
             'Showing $startIdx - $endIdx of ${state.totalCount} vehicles',
-            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFF475569)),
+            style: const TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              color: Color(0xFF475569),
+            ),
           ),
           Row(
             children: [
@@ -383,7 +469,11 @@ class _SalesVehiclesScreenState extends ConsumerState<SalesVehiclesScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Text(
                   'Page ${state.currentPage} of ${state.totalPages}',
-                  style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: AppColors.primaryText),
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primaryText,
+                  ),
                 ),
               ),
               IconButton(

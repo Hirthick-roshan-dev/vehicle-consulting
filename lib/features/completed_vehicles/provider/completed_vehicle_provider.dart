@@ -54,11 +54,46 @@ class CompletedVehicleItem {
         );
 }
 
+enum CompletedPeriod {
+  all('All'),
+  weekly('Weekly'),
+  monthly('Monthly');
+
+  final String displayName;
+  const CompletedPeriod(this.displayName);
+
+  DateTime? get startDate {
+    final now = DateTime.now();
+    switch (this) {
+      case CompletedPeriod.weekly:
+        return DateTime(now.year, now.month, now.day - (now.weekday - 1));
+      case CompletedPeriod.monthly:
+        return DateTime(now.year, now.month, 1);
+      case CompletedPeriod.all:
+        return null;
+    }
+  }
+
+  DateTime? get endDate {
+    final now = DateTime.now();
+    switch (this) {
+      case CompletedPeriod.weekly:
+        final start = DateTime(now.year, now.month, now.day - (now.weekday - 1));
+        return DateTime(start.year, start.month, start.day + 6, 23, 59, 59);
+      case CompletedPeriod.monthly:
+        return DateTime(now.year, now.month + 1, 0, 23, 59, 59);
+      case CompletedPeriod.all:
+        return null;
+    }
+  }
+}
+
 class CompletedVehicleFilter {
   final String searchQuery;
   final VehicleType? typeFilter;
   final VehicleStatus? statusFilter;
   final bool? profitOnly; // true: profit, false: loss, null: all
+  final CompletedPeriod period;
   final int page;
   final int pageSize;
 
@@ -67,6 +102,7 @@ class CompletedVehicleFilter {
     this.typeFilter,
     this.statusFilter,
     this.profitOnly,
+    this.period = CompletedPeriod.all,
     this.page = 1,
     this.pageSize = 12,
   });
@@ -76,6 +112,7 @@ class CompletedVehicleFilter {
     VehicleType? typeFilter,
     VehicleStatus? statusFilter,
     bool? profitOnly,
+    CompletedPeriod? period,
     int? page,
     int? pageSize,
     bool clearType = false,
@@ -87,6 +124,7 @@ class CompletedVehicleFilter {
       typeFilter: clearType ? null : (typeFilter ?? this.typeFilter),
       statusFilter: clearStatus ? null : (statusFilter ?? this.statusFilter),
       profitOnly: clearProfit ? null : (profitOnly ?? this.profitOnly),
+      period: period ?? this.period,
       page: page ?? this.page,
       pageSize: pageSize ?? this.pageSize,
     );
@@ -98,6 +136,10 @@ class CompletedVehiclesResult {
   final int totalCount;
   final int currentPage;
   final int pageSize;
+  final double totalSales;
+  final double totalCost;
+  final double totalNetPL;
+  final double totalBalanceDue;
 
   int get totalPages => (totalCount / pageSize).ceil() == 0 ? 1 : (totalCount / pageSize).ceil();
   bool get hasPrevPage => currentPage > 1;
@@ -108,6 +150,10 @@ class CompletedVehiclesResult {
     required this.totalCount,
     required this.currentPage,
     required this.pageSize,
+    this.totalSales = 0.0,
+    this.totalCost = 0.0,
+    this.totalNetPL = 0.0,
+    this.totalBalanceDue = 0.0,
   });
 }
 
@@ -120,26 +166,15 @@ final completedVehiclesProvider = FutureProvider<CompletedVehiclesResult>((ref) 
   final salesRepo = ref.watch(salesRepositoryProvider);
   final filter = ref.watch(completedVehicleFilterProvider);
 
-  final totalCount = await vehicleRepo.getVehiclesCount(
-    filterStatus: filter.statusFilter,
-    filterType: filter.typeFilter,
-    searchQuery: filter.searchQuery,
-    isCompletedOnly: true,
-  );
-
-  final offset = (filter.page - 1) * filter.pageSize;
-
-  // Fetch paginated vehicles for completed module
+  // Fetch all matching completed vehicles
   final vehicles = await vehicleRepo.getVehicles(
     filterStatus: filter.statusFilter,
     filterType: filter.typeFilter,
     searchQuery: filter.searchQuery,
     isCompletedOnly: true,
-    limit: filter.pageSize,
-    offset: offset,
   );
 
-  final List<CompletedVehicleItem> items = [];
+  final List<CompletedVehicleItem> allMatchingItems = [];
 
   for (var v in vehicles) {
     if (v.id != null) {
@@ -155,21 +190,54 @@ final completedVehiclesProvider = FutureProvider<CompletedVehiclesResult>((ref) 
           payments: payments,
         );
 
+        // Filter by time period (sale date)
+        if (filter.period != CompletedPeriod.all) {
+          final saleDate = DateTime.tryParse(sale.saleDate);
+          if (saleDate != null) {
+            final start = filter.period.startDate;
+            final end = filter.period.endDate;
+            if (start != null && saleDate.isBefore(start)) continue;
+            if (end != null && saleDate.isAfter(end)) continue;
+          }
+        }
+
         // Apply profit/loss filter if active
         if (filter.profitOnly != null) {
           if (filter.profitOnly! && item.profitLoss < 0) continue;
           if (!filter.profitOnly! && item.profitLoss >= 0) continue;
         }
 
-        items.add(item);
+        allMatchingItems.add(item);
       }
     }
   }
 
+  // Sort by sale date descending (most recent first)
+  allMatchingItems.sort((a, b) {
+    final dtA = DateTime.tryParse(a.sale.saleDate) ?? DateTime.fromMillisecondsSinceEpoch(0);
+    final dtB = DateTime.tryParse(b.sale.saleDate) ?? DateTime.fromMillisecondsSinceEpoch(0);
+    return dtB.compareTo(dtA);
+  });
+
+  final totalCount = allMatchingItems.length;
+  final totalSales = allMatchingItems.fold(0.0, (sum, i) => sum + i.sale.totalAmount);
+  final totalCost = allMatchingItems.fold(0.0, (sum, i) => sum + i.totalCost);
+  final totalNetPL = allMatchingItems.fold(0.0, (sum, i) => sum + i.profitLoss);
+  final totalBalanceDue = allMatchingItems.fold(0.0, (sum, i) => sum + i.balance);
+
+  final offset = (filter.page - 1) * filter.pageSize;
+  final paginatedItems = (offset >= totalCount)
+      ? <CompletedVehicleItem>[]
+      : allMatchingItems.skip(offset).take(filter.pageSize).toList();
+
   return CompletedVehiclesResult(
-    items: items,
+    items: paginatedItems,
     totalCount: totalCount,
     currentPage: filter.page,
     pageSize: filter.pageSize,
+    totalSales: totalSales,
+    totalCost: totalCost,
+    totalNetPL: totalNetPL,
+    totalBalanceDue: totalBalanceDue,
   );
 });

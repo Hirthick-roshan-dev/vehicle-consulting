@@ -122,7 +122,7 @@ class VehicleDetailsScreen extends ConsumerWidget {
     Color statusColor;
     switch (vehicle.status) {
       case VehicleStatus.available:
-        statusColor = AppColors.primary;
+        statusColor = AppColors.forSale;
         break;
       case VehicleStatus.partialPayment:
         statusColor = const Color(0xFFEA580C);

@@ -32,7 +32,7 @@ class VehicleCard extends StatelessWidget {
     Color statusColor;
     switch (vehicle.status) {
       case VehicleStatus.available:
-        statusColor = AppColors.primary;
+        statusColor = AppColors.forSale;
         break;
       case VehicleStatus.partialPayment:
         statusColor = AppColors.partialPayment;
@@ -175,9 +175,9 @@ class VehicleCard extends StatelessWidget {
                       Text(
                         '${vehicle.vehicleName} (${vehicle.vehicleModel})',
                         style: const TextStyle(
-                          fontSize: 12,
+                          fontSize: 12.5,
                           fontWeight: FontWeight.w600,
-                          color: Color(0xFF475569),
+                          color: Color(0xFF334155),
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -202,60 +202,60 @@ class VehicleCard extends StatelessWidget {
                             const Text(
                               'Purchase Price:',
                               style: TextStyle(
-                                fontSize: 11,
+                                fontSize: 12,
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xFF475569),
+                                color: Color(0xFF334155),
                               ),
                             ),
                             Text(
                               CurrencyUtils.format(vehicle.purchaseAmount),
                               style: const TextStyle(
-                                fontSize: 12,
+                                fontSize: 13,
                                 fontWeight: FontWeight.bold,
                                 color: Color(0xFFD97706),
                               ),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 2),
+                        const SizedBox(height: 3),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             const Text(
                               'Expenses:',
                               style: TextStyle(
-                                fontSize: 11,
+                                fontSize: 12,
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xFF475569),
+                                color: Color(0xFF334155),
                               ),
                             ),
                             Text(
                               CurrencyUtils.format(expensesTotal),
                               style: const TextStyle(
-                                fontSize: 12,
+                                fontSize: 13,
                                 fontWeight: FontWeight.bold,
                                 color: AppColors.loss,
                               ),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 2),
+                        const SizedBox(height: 3),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             const Text(
                               'Total Cost:',
                               style: TextStyle(
-                                fontSize: 11,
-                                fontWeight: FontWeight.bold,
+                                fontSize: 12.5,
+                                fontWeight: FontWeight.w800,
                                 color: AppColors.primaryText,
                               ),
                             ),
                             Text(
                               CurrencyUtils.format(totalCost),
                               style: const TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
+                                fontSize: 13.5,
+                                fontWeight: FontWeight.w800,
                                 color: AppColors.primary,
                               ),
                             ),
@@ -269,12 +269,12 @@ class VehicleCard extends StatelessWidget {
                   // Owner info footer text
                   Row(
                     children: [
-                      const Icon(Icons.person_outline, size: 14, color: Color(0xFF64748B)),
+                      const Icon(Icons.person_outline, size: 15, color: Color(0xFF475569)),
                       const SizedBox(width: 4),
                       Expanded(
                         child: Text(
                           '${vehicle.ownerName} • Reg: ${vehicle.registrationYear}',
-                          style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: Color(0xFF475569)),
+                          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Color(0xFF334155)),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),

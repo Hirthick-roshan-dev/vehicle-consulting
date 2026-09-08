@@ -283,7 +283,7 @@
       "sale": {
         "customer_name": "Sundaramurthy Pillai",
         "customer_phone": "9443198765",
-        "sale_date": "2026-08-28",
+        "sale_date": "2026-09-08",
         "payment_type": "FULL",
         "is_emi": 0,
         "finance_name": null,
@@ -294,13 +294,13 @@
       "payments": [
         {
           "amount": 200000.0,
-          "payment_date": "2026-08-28",
+          "payment_date": "2026-09-08",
           "payment_method": "UPI",
           "notes": "Token advance"
         },
         {
           "amount": 880000.0,
-          "payment_date": "2026-08-29",
+          "payment_date": "2026-09-08",
           "payment_method": "BANK_TRANSFER",
           "notes": "Final settlement via RTGS"
         }
@@ -666,7 +666,7 @@
       "sale": {
         "customer_name": "Priyadarshini Sundaram",
         "customer_phone": "9842200016",
-        "sale_date": "2026-08-20",
+        "sale_date": "2026-09-03",
         "payment_type": "UPI",
         "is_emi": 0,
         "finance_name": null,
@@ -677,13 +677,13 @@
       "payments": [
         {
           "amount": 50000.0,
-          "payment_date": "2026-08-20",
+          "payment_date": "2026-09-03",
           "payment_method": "UPI",
           "notes": "Booking advance payment"
         },
         {
           "amount": 32000.0,
-          "payment_date": "2026-08-24",
+          "payment_date": "2026-09-04",
           "payment_method": "UPI",
           "notes": "Final settlement upon delivery"
         }
