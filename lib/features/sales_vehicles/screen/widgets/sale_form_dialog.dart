@@ -16,6 +16,7 @@ class SaleFormResult {
   final bool isEmi;
   final String? financeName;
   final double totalSaleAmount;
+  final double documentCharges;
   final double advanceAmount;
   final String? notes;
 
@@ -27,6 +28,7 @@ class SaleFormResult {
     required this.isEmi,
     this.financeName,
     required this.totalSaleAmount,
+    this.documentCharges = 0.0,
     required this.advanceAmount,
     this.notes,
   });
@@ -36,7 +38,6 @@ class SaleFormDialog extends StatefulWidget {
   final int vehicleId;
   final String vehicleName;
   final String vehicleNumber;
-  final double suggestedPrice;
   final VehicleSaleModel? saleToEdit;
 
   const SaleFormDialog({
@@ -44,7 +45,6 @@ class SaleFormDialog extends StatefulWidget {
     required this.vehicleId,
     required this.vehicleName,
     required this.vehicleNumber,
-    required this.suggestedPrice,
     this.saleToEdit,
   });
 
@@ -59,6 +59,7 @@ class _SaleFormDialogState extends State<SaleFormDialog> {
   late TextEditingController _customerPhoneController;
   late TextEditingController _saleDateController;
   late TextEditingController _totalAmountController;
+  late TextEditingController _documentChargesController;
   late TextEditingController _advanceAmountController;
   late TextEditingController _financeNameController;
   late TextEditingController _notesController;
@@ -80,9 +81,12 @@ class _SaleFormDialogState extends State<SaleFormDialog> {
       text: AppDateUtils.formatDisplay(_selectedSaleDate),
     );
     _totalAmountController = TextEditingController(
-      text: s != null
-          ? s.totalAmount.toStringAsFixed(0)
-          : (widget.suggestedPrice > 0 ? widget.suggestedPrice.toStringAsFixed(0) : ''),
+      text: s != null ? s.totalAmount.toStringAsFixed(0) : '',
+    );
+    _documentChargesController = TextEditingController(
+      text: s != null && s.documentCharges > 0
+          ? s.documentCharges.toStringAsFixed(0)
+          : '0',
     );
     _advanceAmountController = TextEditingController(text: '0');
     _financeNameController = TextEditingController(text: s?.financeName ?? '');
@@ -112,7 +116,8 @@ class _SaleFormDialogState extends State<SaleFormDialog> {
   void _submit() {
     if (!_formKey.currentState!.validate()) return;
 
-    final totalSale = double.parse(_totalAmountController.text.trim());
+    final totalSale = double.tryParse(_totalAmountController.text.trim()) ?? 0.0;
+    final docCharges = double.tryParse(_documentChargesController.text.trim()) ?? 0.0;
     final advance = double.tryParse(_advanceAmountController.text.trim()) ?? 0.0;
 
     if (widget.saleToEdit == null) {
@@ -147,6 +152,7 @@ class _SaleFormDialogState extends State<SaleFormDialog> {
       isEmi: _isEmi,
       financeName: _isEmi ? _financeNameController.text.trim() : null,
       totalSaleAmount: totalSale,
+      documentCharges: docCharges,
       advanceAmount: advance,
       notes: _notesController.text.trim().isEmpty ? null : _notesController.text.trim(),
     );
@@ -160,6 +166,7 @@ class _SaleFormDialogState extends State<SaleFormDialog> {
     _customerPhoneController.dispose();
     _saleDateController.dispose();
     _totalAmountController.dispose();
+    _documentChargesController.dispose();
     _advanceAmountController.dispose();
     _financeNameController.dispose();
     _notesController.dispose();
@@ -210,6 +217,9 @@ class _SaleFormDialogState extends State<SaleFormDialog> {
                     label: 'Customer Name *',
                     hint: 'Full name',
                     controller: _customerNameController,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(50),
+                    ],
                     validator: (val) => Validators.requiredField(val, 'Customer Name'),
                   ),
                 ),
@@ -294,6 +304,9 @@ class _SaleFormDialogState extends State<SaleFormDialog> {
                 label: 'Finance / Bank Company Name *',
                 hint: 'e.g. HDFC Finance / TVS Credit',
                 controller: _financeNameController,
+                inputFormatters: [
+                  LengthLimitingTextInputFormatter(50),
+                ],
                 validator: (val) => _isEmi ? Validators.requiredField(val, 'Finance Company Name') : null,
               ),
             ],
@@ -306,29 +319,52 @@ class _SaleFormDialogState extends State<SaleFormDialog> {
                     hint: 'e.g. 500000',
                     controller: _totalAmountController,
                     keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(12),
+                    ],
                     validator: (val) => Validators.strictlyPositiveAmount(val, 'Total Sale Amount'),
                   ),
                 ),
-                if (!isEdit) ...[
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: AppTextField(
-                      label: 'Advance Amount Paid (₹)',
-                      hint: 'e.g. 200000 (Enter 0 if unpaid)',
-                      controller: _advanceAmountController,
-                      keyboardType: TextInputType.number,
-                      validator: (val) => Validators.positiveAmount(val, 'Advance Paid'),
-                    ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: AppTextField(
+                    label: 'Document Charges (₹)',
+                    hint: 'e.g. 3000 (Enter 0 if none)',
+                    controller: _documentChargesController,
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(10),
+                    ],
+                    validator: (val) => Validators.positiveAmount(val, 'Document Charges'),
                   ),
-                ],
+                ),
               ],
             ),
+            if (!isEdit) ...[
+              const SizedBox(height: 12),
+              AppTextField(
+                label: 'Advance Amount Paid (₹)',
+                hint: 'e.g. 200000 (Enter 0 if unpaid)',
+                controller: _advanceAmountController,
+                keyboardType: TextInputType.number,
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                  LengthLimitingTextInputFormatter(12),
+                ],
+                validator: (val) => Validators.positiveAmount(val, 'Advance Paid'),
+              ),
+            ],
             const SizedBox(height: 12),
             // Dedicated Sale Notes Field
             AppTextField(
               label: 'Sale Notes & Delivery Remarks',
               hint: 'Enter delivery remarks, RTO documentation notes, buyer instructions...',
               controller: _notesController,
+              inputFormatters: [
+                LengthLimitingTextInputFormatter(500),
+              ],
               maxLines: 3,
             ),
           ],

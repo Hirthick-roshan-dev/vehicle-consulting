@@ -320,9 +320,6 @@ class VehicleDetailsScreen extends ConsumerWidget {
                         vehicleId: vehicle.id!,
                         vehicleName: vehicle.vehicleName,
                         vehicleNumber: vehicle.vehicleNumber,
-                        suggestedPrice: vehicle.salePrice > 0
-                            ? vehicle.salePrice
-                            : data.totalCost,
                       ),
                     );
                     if (result != null) {
@@ -336,6 +333,7 @@ class VehicleDetailsScreen extends ConsumerWidget {
                         isEmi: result.isEmi,
                         financeName: result.financeName,
                         totalAmount: result.totalSaleAmount,
+                        documentCharges: result.documentCharges,
                         notes: result.notes,
                         createdAt: now,
                         updatedAt: now,
@@ -406,16 +404,6 @@ class VehicleDetailsScreen extends ConsumerWidget {
             valueColor: AppColors.primary,
             isBold: true,
           ),
-          if (data.vehicle.salePrice > 0 && data.sale == null) ...[
-            const SizedBox(width: 1, height: 36, child: VerticalDivider()),
-            // Target Selling Price in Green
-            _buildStatItem(
-              'Target Sale Price',
-              CurrencyUtils.format(data.vehicle.salePrice),
-              valueColor: const Color(0xFF059669),
-              isBold: true,
-            ),
-          ],
           if (data.sale != null) ...[
             const SizedBox(width: 1, height: 36, child: VerticalDivider()),
             // Sale Amount in Green
@@ -522,12 +510,6 @@ class VehicleDetailsScreen extends ConsumerWidget {
                 'Commission Amount',
                 CurrencyUtils.format(vehicle.commissionAmount),
                 valueColor: const Color(0xFF7C3AED),
-              ),
-            if (vehicle.salePrice > 0)
-              _infoRow(
-                'Target Selling Price',
-                CurrencyUtils.format(vehicle.salePrice),
-                valueColor: const Color(0xFF059669),
               ),
             if (vehicle.notes != null)
               _infoRow('Remarks & Notes', vehicle.notes!),
@@ -779,7 +761,6 @@ class VehicleDetailsScreen extends ConsumerWidget {
                             vehicleId: vehicle.id!,
                             vehicleName: vehicle.vehicleName,
                             vehicleNumber: vehicle.vehicleNumber,
-                            suggestedPrice: data.totalCost,
                             saleToEdit: sale,
                           ),
                         );
@@ -794,6 +775,7 @@ class VehicleDetailsScreen extends ConsumerWidget {
                             isEmi: result.isEmi,
                             financeName: result.financeName,
                             totalAmount: result.totalSaleAmount,
+                            documentCharges: result.documentCharges,
                             notes: result.notes,
                             createdAt: sale.createdAt,
                             updatedAt: DateTime.now().toIso8601String(),
@@ -925,6 +907,12 @@ class VehicleDetailsScreen extends ConsumerWidget {
               CurrencyUtils.format(sale.totalAmount),
               valueColor: const Color(0xFF059669),
             ),
+            if (sale.documentCharges > 0)
+              _infoRow(
+                'Document Charges',
+                CurrencyUtils.format(sale.documentCharges),
+                valueColor: const Color(0xFF2563EB),
+              ),
             _infoRow(
               'Total Paid So Far',
               CurrencyUtils.format(data.totalPaid),

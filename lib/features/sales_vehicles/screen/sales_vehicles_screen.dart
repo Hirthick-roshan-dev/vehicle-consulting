@@ -77,7 +77,7 @@ class _SalesVehiclesScreenState extends ConsumerState<SalesVehiclesScreen> {
                     ),
                     const SizedBox(height: 4),
                     const Text(
-                      'Product card catalog view for available inventory and sales.',
+                      'Product card catalog view for available inventory and partial payment sales.',
                       style: TextStyle(
                         fontSize: 13,
                         color: Color(0xFF475569),
@@ -106,11 +106,11 @@ class _SalesVehiclesScreenState extends ConsumerState<SalesVehiclesScreen> {
             ),
             const SizedBox(height: 20),
 
-            // Controls Bar: Search + Type Filters
+            // Controls Bar: Search + Status + Type Filters
             Row(
               children: [
                 Expanded(
-                  flex: 4,
+                  flex: 3,
                   child: TextField(
                     controller: _searchController,
                     onChanged: _onSearchChanged,
@@ -129,13 +129,51 @@ class _SalesVehiclesScreenState extends ConsumerState<SalesVehiclesScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(width: 16),
+                const SizedBox(width: 12),
+
+                // Status Filter Chips
+                FilterChip(
+                  label: const Text('All Statuses'),
+                  selected: filterState.statusFilter == null,
+                  onSelected: (_) {
+                    ref.read(vehicleFilterProvider.notifier).setStatusFilter(null);
+                    ref.read(vehicleProvider.notifier).loadSalesVehicles(
+                          ref.read(vehicleFilterProvider),
+                          page: 1,
+                        );
+                  },
+                ),
+                const SizedBox(width: 6),
+                FilterChip(
+                  label: const Text('Available'),
+                  selected: filterState.statusFilter == VehicleStatus.available,
+                  onSelected: (sel) {
+                    ref.read(vehicleFilterProvider.notifier).setStatusFilter(sel ? VehicleStatus.available : null);
+                    ref.read(vehicleProvider.notifier).loadSalesVehicles(
+                          ref.read(vehicleFilterProvider),
+                          page: 1,
+                        );
+                  },
+                ),
+                const SizedBox(width: 6),
+                FilterChip(
+                  label: const Text('Partial Payment'),
+                  selected: filterState.statusFilter == VehicleStatus.partialPayment,
+                  onSelected: (sel) {
+                    ref.read(vehicleFilterProvider.notifier).setStatusFilter(sel ? VehicleStatus.partialPayment : null);
+                    ref.read(vehicleProvider.notifier).loadSalesVehicles(
+                          ref.read(vehicleFilterProvider),
+                          page: 1,
+                        );
+                  },
+                ),
+                const SizedBox(width: 12),
 
                 // Vehicle Type Filter Buttons
                 FilterChip(
                   label: const Text('All Types'),
                   selected: filterState.typeFilter == null,
-                  onSelected: (sel) {
+                  onSelected: (_) {
                     ref.read(vehicleFilterProvider.notifier).setTypeFilter(null);
                     ref.read(vehicleProvider.notifier).loadSalesVehicles(
                           ref.read(vehicleFilterProvider),
@@ -143,24 +181,24 @@ class _SalesVehiclesScreenState extends ConsumerState<SalesVehiclesScreen> {
                         );
                   },
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: 6),
                 FilterChip(
-                  label: const Text('2 Wheeler'),
+                  label: const Text('2W'),
                   selected: filterState.typeFilter == VehicleType.twoWheeler,
                   onSelected: (sel) {
-                    ref.read(vehicleFilterProvider.notifier).setTypeFilter(VehicleType.twoWheeler);
+                    ref.read(vehicleFilterProvider.notifier).setTypeFilter(sel ? VehicleType.twoWheeler : null);
                     ref.read(vehicleProvider.notifier).loadSalesVehicles(
                           ref.read(vehicleFilterProvider),
                           page: 1,
                         );
                   },
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: 6),
                 FilterChip(
-                  label: const Text('4 Wheeler'),
+                  label: const Text('4W'),
                   selected: filterState.typeFilter == VehicleType.fourWheeler,
                   onSelected: (sel) {
-                    ref.read(vehicleFilterProvider.notifier).setTypeFilter(VehicleType.fourWheeler);
+                    ref.read(vehicleFilterProvider.notifier).setTypeFilter(sel ? VehicleType.fourWheeler : null);
                     ref.read(vehicleProvider.notifier).loadSalesVehicles(
                           ref.read(vehicleFilterProvider),
                           page: 1,
@@ -202,7 +240,6 @@ class _SalesVehiclesScreenState extends ConsumerState<SalesVehiclesScreen> {
                                     itemBuilder: (context, index) {
                                       final vehicle = vehicleState.vehicles[index];
                                       final expensesTotal = vehicleState.vehicleExpensesMap[vehicle.id] ?? 0.0;
-                                      final totalCost = vehicle.purchaseAmount + vehicle.commissionAmount + expensesTotal;
 
                                       return VehicleCard(
                                         vehicle: vehicle,
@@ -238,7 +275,6 @@ class _SalesVehiclesScreenState extends ConsumerState<SalesVehiclesScreen> {
                                                     vehicleId: vehicle.id!,
                                                     vehicleName: vehicle.vehicleName,
                                                     vehicleNumber: vehicle.vehicleNumber,
-                                                    suggestedPrice: vehicle.salePrice > 0 ? vehicle.salePrice : totalCost,
                                                   ),
                                                 );
                                                 if (result != null) {
@@ -253,6 +289,7 @@ class _SalesVehiclesScreenState extends ConsumerState<SalesVehiclesScreen> {
                                                           isEmi: result.isEmi,
                                                           financeName: result.financeName,
                                                           totalAmount: result.totalSaleAmount,
+                                                          documentCharges: result.documentCharges,
                                                           notes: result.notes,
                                                           createdAt: now,
                                                           updatedAt: now,

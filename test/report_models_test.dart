@@ -10,7 +10,7 @@ import 'package:vehicle_consulting/features/sales_vehicles/model/vehicle_type.da
 
 void main() {
   group('Reports Module - Stock and Profit Analytics Tests', () {
-    test('StockReportItem computes total invested and projected profit correctly', () {
+    test('StockReportItem computes total invested and expenses correctly', () {
       final vehicle = VehicleModel(
         id: 1,
         vehicleNumber: 'TN38AB1234',
@@ -25,7 +25,6 @@ void main() {
         purchaseAmount: 450000.0,
         paymentMethod: PaymentMethod.cash,
         commissionAmount: 5000.0,
-        salePrice: 520000.0,
         status: VehicleStatus.available,
         createdAt: '2026-08-01T10:00:00',
         updatedAt: '2026-08-01T10:00:00',
@@ -56,7 +55,6 @@ void main() {
 
       expect(stockItem.totalExpenses, 10000.0);
       expect(stockItem.totalInvested, 465000.0); // 450000 + 5000 comm + 10000 exp
-      expect(stockItem.projectedProfit, 55000.0); // 520000 - 465000
     });
 
     test('StockSummary aggregates 2W, 4W counts and financial totals correctly', () {
@@ -74,7 +72,6 @@ void main() {
         purchaseAmount: 400000.0,
         paymentMethod: PaymentMethod.cash,
         commissionAmount: 5000.0,
-        salePrice: 480000.0,
         status: VehicleStatus.available,
         createdAt: '2026-08-01T10:00:00',
         updatedAt: '2026-08-01T10:00:00',
@@ -94,7 +91,6 @@ void main() {
         purchaseAmount: 140000.0,
         paymentMethod: PaymentMethod.bankTransfer,
         commissionAmount: 2000.0,
-        salePrice: 165000.0,
         status: VehicleStatus.available,
         createdAt: '2026-08-10T10:00:00',
         updatedAt: '2026-08-10T10:00:00',
@@ -109,8 +105,6 @@ void main() {
       expect(summary.fourWheelerCount, 1);
       expect(summary.twoWheelerCount, 1);
       expect(summary.totalInvested, 547000.0); // 405000 + 142000
-      expect(summary.totalExpectedValue, 645000.0); // 480000 + 165000
-      expect(summary.projectedProfit, 98000.0); // 645000 - 547000
     });
 
     test('SalesReportItem and ProfitSummary calculate net profit, margins and receivables correctly', () {
@@ -191,6 +185,44 @@ void main() {
       expect(profitSummary.totalProfitLoss, 65000.0);
       expect(profitSummary.totalCollected, 580000.0);
       expect(profitSummary.totalPendingReceivable, 0.0);
+    });
+
+    test('VehicleSaleModel serializes documentCharges correctly', () {
+      final sale = VehicleSaleModel(
+        id: 2,
+        vehicleId: 20,
+        customerName: 'Karthik',
+        customerPhone: '9876543210',
+        saleDate: '2026-09-01',
+        paymentType: PaymentMethod.cash,
+        isEmi: false,
+        totalAmount: 300000.0,
+        documentCharges: 4500.0,
+        createdAt: '2026-09-01T10:00:00',
+        updatedAt: '2026-09-01T10:00:00',
+      );
+
+      final map = sale.toMap();
+      expect(map['document_charges'], 4500.0);
+
+      final deserialized = VehicleSaleModel.fromMap(map);
+      expect(deserialized.documentCharges, 4500.0);
+      expect(deserialized.totalAmount, 300000.0);
+
+      // Default when missing
+      final defaultSale = VehicleSaleModel.fromMap({
+        'id': 3,
+        'vehicle_id': 21,
+        'customer_name': 'Ramesh',
+        'customer_phone': '9876543211',
+        'sale_date': '2026-09-02',
+        'payment_type': 'Cash',
+        'is_emi': 0,
+        'total_amount': 250000.0,
+        'created_at': '2026-09-02T10:00:00',
+        'updated_at': '2026-09-02T10:00:00',
+      });
+      expect(defaultSale.documentCharges, 0.0);
     });
   });
 }

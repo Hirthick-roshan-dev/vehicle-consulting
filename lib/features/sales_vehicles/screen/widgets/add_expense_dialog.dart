@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../../../../core/utils/date_utils.dart';
 import '../../../../core/utils/validators.dart';
 import '../../../../core/widgets/app_dialog.dart';
@@ -66,7 +67,7 @@ class _AddExpenseDialogState extends State<AddExpenseDialog> {
       vehicleId: widget.vehicleId,
       expenseTitle: _titleController.text.trim(),
       description: _descriptionController.text.trim().isEmpty ? null : _descriptionController.text.trim(),
-      amount: double.parse(_amountController.text.trim()),
+      amount: double.tryParse(_amountController.text.trim()) ?? 0.0,
       expenseDate: AppDateUtils.toIso(_selectedDate),
       createdAt: widget.expenseToEdit?.createdAt ?? now,
       updatedAt: now,
@@ -100,6 +101,9 @@ class _AddExpenseDialogState extends State<AddExpenseDialog> {
               label: 'Expense Title *',
               hint: 'e.g. Painting / Service / RC Transfer',
               controller: _titleController,
+              inputFormatters: [
+                LengthLimitingTextInputFormatter(60),
+              ],
               validator: (val) => Validators.requiredField(val, 'Expense Title'),
             ),
             const SizedBox(height: 12),
@@ -108,6 +112,10 @@ class _AddExpenseDialogState extends State<AddExpenseDialog> {
               hint: 'e.g. 5000',
               controller: _amountController,
               keyboardType: TextInputType.number,
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+                LengthLimitingTextInputFormatter(10),
+              ],
               validator: (val) => Validators.strictlyPositiveAmount(val, 'Amount'),
             ),
             const SizedBox(height: 12),
@@ -123,6 +131,9 @@ class _AddExpenseDialogState extends State<AddExpenseDialog> {
               label: 'Description / Details',
               hint: 'Optional notes',
               controller: _descriptionController,
+              inputFormatters: [
+                LengthLimitingTextInputFormatter(250),
+              ],
               maxLines: 2,
             ),
           ],

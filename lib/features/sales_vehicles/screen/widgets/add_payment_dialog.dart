@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/currency_utils.dart';
 import '../../../../core/utils/date_utils.dart';
@@ -64,7 +65,7 @@ class _AddPaymentDialogState extends State<AddPaymentDialog> {
   void _submit() {
     if (!_formKey.currentState!.validate()) return;
 
-    final payAmount = double.parse(_amountController.text.trim());
+    final payAmount = double.tryParse(_amountController.text.trim()) ?? 0.0;
     if (payAmount > widget.currentBalance) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -139,6 +140,10 @@ class _AddPaymentDialogState extends State<AddPaymentDialog> {
               hint: 'e.g. 100000',
               controller: _amountController,
               keyboardType: TextInputType.number,
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+                LengthLimitingTextInputFormatter(12),
+              ],
               validator: (val) => Validators.strictlyPositiveAmount(val, 'Payment Amount'),
             ),
             const SizedBox(height: 12),
@@ -186,6 +191,9 @@ class _AddPaymentDialogState extends State<AddPaymentDialog> {
               label: 'Notes / Reference',
               hint: 'Optional notes',
               controller: _notesController,
+              inputFormatters: [
+                LengthLimitingTextInputFormatter(250),
+              ],
             ),
           ],
         ),

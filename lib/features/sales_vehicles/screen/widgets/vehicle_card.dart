@@ -261,30 +261,6 @@ class VehicleCard extends StatelessWidget {
                             ),
                           ],
                         ),
-                        if (vehicle.salePrice > 0) ...[
-                          const Divider(height: 8),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text(
-                                'Target Sale Price:',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF059669),
-                                ),
-                              ),
-                              Text(
-                                CurrencyUtils.format(vehicle.salePrice),
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF059669),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
                       ],
                     ),
                   ),
