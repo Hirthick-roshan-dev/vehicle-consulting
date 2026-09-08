@@ -7,7 +7,6 @@ import '../../../core/widgets/empty_state.dart';
 import '../../../core/widgets/loading_widget.dart';
 import '../../auth/provider/auth_provider.dart';
 import '../../sales_vehicles/model/payment_model.dart';
-import '../../sales_vehicles/model/vehicle_status.dart';
 import '../../sales_vehicles/model/vehicle_type.dart';
 import '../../sales_vehicles/provider/vehicle_details_provider.dart';
 import '../../sales_vehicles/provider/vehicle_provider.dart';
@@ -82,7 +81,7 @@ class _CompletedVehiclesScreenState extends ConsumerState<CompletedVehiclesScree
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      'Completed & Partial Sales Archive',
+                      'Completed Vehicles Archive',
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -91,7 +90,7 @@ class _CompletedVehiclesScreenState extends ConsumerState<CompletedVehiclesScree
                     ),
                     const SizedBox(height: 4),
                     const Text(
-                      'Product card catalog for completed and partially paid vehicle records with Profit/Loss analysis.',
+                      'Product card catalog for fully completed vehicle sales with Profit/Loss analysis.',
                       style: TextStyle(
                         fontSize: 13,
                         color: Color(0xFF475569),
@@ -130,34 +129,6 @@ class _CompletedVehiclesScreenState extends ConsumerState<CompletedVehiclesScree
                           : null,
                     ),
                   ),
-                ),
-                const SizedBox(width: 12),
-                // Status Filter Chips
-                FilterChip(
-                  label: const Text('All Statuses'),
-                  selected: filter.statusFilter == null,
-                  onSelected: (sel) {
-                    ref.read(completedVehicleFilterProvider.notifier).state =
-                        filter.copyWith(clearStatus: true, page: 1);
-                  },
-                ),
-                const SizedBox(width: 6),
-                FilterChip(
-                  label: const Text('Partial Payment'),
-                  selected: filter.statusFilter == VehicleStatus.partialPayment,
-                  onSelected: (sel) {
-                    ref.read(completedVehicleFilterProvider.notifier).state =
-                        filter.copyWith(statusFilter: sel ? VehicleStatus.partialPayment : null, page: 1);
-                  },
-                ),
-                const SizedBox(width: 6),
-                FilterChip(
-                  label: const Text('Fully Paid'),
-                  selected: filter.statusFilter == VehicleStatus.completed,
-                  onSelected: (sel) {
-                    ref.read(completedVehicleFilterProvider.notifier).state =
-                        filter.copyWith(statusFilter: sel ? VehicleStatus.completed : null, page: 1);
-                  },
                 ),
                 const SizedBox(width: 12),
                 // Type Filter Chips

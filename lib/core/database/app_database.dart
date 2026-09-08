@@ -65,6 +65,11 @@ class AppDatabase {
         'ALTER TABLE ${DatabaseConstants.tableVehicles} ADD COLUMN sale_price REAL DEFAULT 0.0;',
       );
     }
+    if (oldVersion < 5) {
+      await db.execute(
+        'ALTER TABLE ${DatabaseConstants.tableSales} ADD COLUMN document_charges REAL DEFAULT 0.0;',
+      );
+    }
 
     // Ensure official default business profile is populated
     try {
@@ -212,6 +217,7 @@ class AppDatabase {
         is_emi INTEGER NOT NULL DEFAULT 0,
         finance_name TEXT,
         total_amount REAL NOT NULL,
+        document_charges REAL DEFAULT 0.0,
         notes TEXT,
         created_at TEXT NOT NULL,
         updated_at TEXT NOT NULL,

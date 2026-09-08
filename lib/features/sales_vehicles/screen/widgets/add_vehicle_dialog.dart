@@ -36,7 +36,6 @@ class _AddVehicleDialogState extends State<AddVehicleDialog> {
   late TextEditingController _purchaseAmountController;
   late TextEditingController _referenceController;
   late TextEditingController _commissionController;
-  late TextEditingController _salePriceController;
   late TextEditingController _notesController;
 
   VehicleType _selectedType = VehicleType.fourWheeler;
@@ -74,9 +73,6 @@ class _AddVehicleDialogState extends State<AddVehicleDialog> {
     _referenceController = TextEditingController(text: v?.referenceName ?? '');
     _commissionController = TextEditingController(
       text: v != null && v.commissionAmount > 0 ? v.commissionAmount.toStringAsFixed(0) : '0',
-    );
-    _salePriceController = TextEditingController(
-      text: v != null && v.salePrice > 0 ? v.salePrice.toStringAsFixed(0) : '',
     );
     _notesController = TextEditingController(text: v?.notes ?? '');
     _imagePath = v?.imagePath;
@@ -141,14 +137,14 @@ class _AddVehicleDialogState extends State<AddVehicleDialog> {
       vehicleType: _selectedType,
       ownerName: _ownerNameController.text.trim(),
       ownerPhone: Validators.formatIndianPhone(_ownerPhoneController.text),
-      manufacturingYear: int.parse(_mfgYearController.text.trim()),
-      registrationYear: int.parse(_regYearController.text.trim()),
+      manufacturingYear: int.tryParse(_mfgYearController.text.trim()) ?? DateTime.now().year,
+      registrationYear: int.tryParse(_regYearController.text.trim()) ?? DateTime.now().year,
       purchaseDate: AppDateUtils.toIso(_selectedPurchaseDate),
-      purchaseAmount: double.parse(_purchaseAmountController.text.trim()),
+      purchaseAmount: double.tryParse(_purchaseAmountController.text.trim()) ?? 0.0,
       paymentMethod: _selectedPaymentMethod,
       referenceName: _referenceController.text.trim().isEmpty ? null : _referenceController.text.trim(),
       commissionAmount: double.tryParse(_commissionController.text.trim()) ?? 0.0,
-      salePrice: double.tryParse(_salePriceController.text.trim()) ?? 0.0,
+      salePrice: 0.0,
       status: widget.vehicleToEdit?.status ?? VehicleStatus.available,
       notes: _notesController.text.trim().isEmpty ? null : _notesController.text.trim(),
       imagePath: finalImagePath,
@@ -174,7 +170,6 @@ class _AddVehicleDialogState extends State<AddVehicleDialog> {
     _purchaseAmountController.dispose();
     _referenceController.dispose();
     _commissionController.dispose();
-    _salePriceController.dispose();
     _notesController.dispose();
     super.dispose();
   }
@@ -290,6 +285,9 @@ class _AddVehicleDialogState extends State<AddVehicleDialog> {
                     label: 'Vehicle Number *',
                     hint: 'e.g. TN-39-AB-1234',
                     controller: _vehicleNumberController,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(15),
+                    ],
                     validator: Validators.vehicleNumber,
                   ),
                 ),
@@ -299,6 +297,9 @@ class _AddVehicleDialogState extends State<AddVehicleDialog> {
                     label: 'Vehicle Name *',
                     hint: 'e.g. Swift / Activa',
                     controller: _vehicleNameController,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(50),
+                    ],
                     validator: (val) => Validators.requiredField(val, 'Vehicle Name'),
                   ),
                 ),
@@ -312,6 +313,9 @@ class _AddVehicleDialogState extends State<AddVehicleDialog> {
                     label: 'Model / Variant *',
                     hint: 'e.g. VXI / 6G',
                     controller: _vehicleModelController,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(50),
+                    ],
                     validator: (val) => Validators.requiredField(val, 'Model'),
                   ),
                 ),
@@ -351,6 +355,9 @@ class _AddVehicleDialogState extends State<AddVehicleDialog> {
                     label: 'Previous Owner Name *',
                     hint: 'Previous owner name',
                     controller: _ownerNameController,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(50),
+                    ],
                     validator: (val) => Validators.requiredField(val, 'Owner Name'),
                   ),
                 ),
@@ -380,6 +387,10 @@ class _AddVehicleDialogState extends State<AddVehicleDialog> {
                     hint: 'e.g. 2020',
                     controller: _mfgYearController,
                     keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(4),
+                    ],
                     validator: (val) => Validators.year(val, 'Manufacturing Year'),
                   ),
                 ),
@@ -390,6 +401,10 @@ class _AddVehicleDialogState extends State<AddVehicleDialog> {
                     hint: 'e.g. 2020',
                     controller: _regYearController,
                     keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(4),
+                    ],
                     validator: (val) => Validators.year(val, 'Registration Year'),
                   ),
                 ),
@@ -421,6 +436,10 @@ class _AddVehicleDialogState extends State<AddVehicleDialog> {
                     hint: 'e.g. 500000',
                     controller: _purchaseAmountController,
                     keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(12),
+                    ],
                     validator: (val) => Validators.strictlyPositiveAmount(val, 'Purchase Amount'),
                   ),
                 ),
@@ -460,33 +479,24 @@ class _AddVehicleDialogState extends State<AddVehicleDialog> {
                     label: 'Reference / Broker Name',
                     hint: 'Agent / Broker reference',
                     controller: _referenceController,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(50),
+                    ],
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 12),
-            Row(
-              children: [
-                Expanded(
-                  child: AppTextField(
-                    label: 'Commission Amount (₹)',
-                    hint: 'e.g. 5000',
-                    controller: _commissionController,
-                    keyboardType: TextInputType.number,
-                    validator: (val) => val == null || val.isEmpty ? null : Validators.positiveAmount(val, 'Commission'),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: AppTextField(
-                    label: 'Target Selling Price (₹) *',
-                    hint: 'e.g. 550000 (Expected Customer Price)',
-                    controller: _salePriceController,
-                    keyboardType: TextInputType.number,
-                    validator: (val) => Validators.strictlyPositiveAmount(val, 'Selling Price'),
-                  ),
-                ),
+            AppTextField(
+              label: 'Commission Amount (₹)',
+              hint: 'e.g. 5000 (Enter 0 if none)',
+              controller: _commissionController,
+              keyboardType: TextInputType.number,
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+                LengthLimitingTextInputFormatter(10),
               ],
+              validator: (val) => val == null || val.isEmpty ? null : Validators.positiveAmount(val, 'Commission'),
             ),
             const SizedBox(height: 12),
             // Dedicated Full-Width Notes Field
@@ -494,6 +504,9 @@ class _AddVehicleDialogState extends State<AddVehicleDialog> {
               label: 'Notes & Vehicle Remarks',
               hint: 'Enter any additional details, vehicle condition, document remarks, etc...',
               controller: _notesController,
+              inputFormatters: [
+                LengthLimitingTextInputFormatter(500),
+              ],
               maxLines: 3,
             ),
           ],

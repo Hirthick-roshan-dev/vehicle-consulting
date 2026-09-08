@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/app_button.dart';
 import '../../auth/provider/auth_provider.dart';
+import '../provider/sample_data_provider.dart';
 import 'widgets/change_password_dialog.dart';
 import 'widgets/passkey_dialog.dart';
 
@@ -13,6 +14,7 @@ class SettingsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authProvider);
     final isAdmin = authState.user?.isAdmin ?? false;
+    final sampleState = ref.watch(sampleDataProvider);
 
     if (!isAdmin) {
       return Scaffold(
@@ -42,7 +44,7 @@ class SettingsScreen extends ConsumerWidget {
     }
 
     return Scaffold(
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -57,7 +59,7 @@ class SettingsScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 4),
             const Text(
-              'Manage your security credentials and password.',
+              'Manage your security credentials, demo data, and app configuration.',
               style: TextStyle(fontSize: 13, color: Color(0xFF475569), fontWeight: FontWeight.w500),
             ),
             const SizedBox(height: 24),
@@ -120,6 +122,83 @@ class SettingsScreen extends ConsumerWidget {
                           },
                         ),
                       ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            Container(
+              constraints: const BoxConstraints(maxWidth: 650),
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Row(
+                        children: [
+                          Icon(Icons.dataset_outlined, color: AppColors.primary),
+                          SizedBox(width: 10),
+                          Text(
+                            'Demo & Sample Data',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.primaryText,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const Divider(height: 24),
+                      SwitchListTile(
+                        contentPadding: EdgeInsets.zero,
+                        secondary: const Icon(Icons.directions_car_outlined, color: AppColors.primary),
+                        title: const Text(
+                          'Load Sample Data',
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                        ),
+                        subtitle: const Text(
+                          'Populate the database with 16 realistic 2W and 4W sample vehicles (Available, Partially Paid, and Completed) with photos, expenses, and transaction records.',
+                          style: TextStyle(color: Color(0xFF475569), fontSize: 12),
+                        ),
+                        value: sampleState.isLoaded,
+                        onChanged: sampleState.isOperating
+                            ? null
+                            : (val) async {
+                                final success = await ref
+                                    .read(sampleDataProvider.notifier)
+                                    .toggleSampleData(val);
+                                if (context.mounted) {
+                                  if (success) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          val
+                                              ? 'Sample data loaded successfully (16 vehicles)!'
+                                              : 'Sample data removed from database.',
+                                        ),
+                                        backgroundColor: val ? AppColors.profit : AppColors.primary,
+                                      ),
+                                    );
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          sampleState.errorMessage ??
+                                              'Failed to update sample data.',
+                                        ),
+                                        backgroundColor: AppColors.loss,
+                                      ),
+                                    );
+                                  }
+                                }
+                              },
+                      ),
+                      if (sampleState.isOperating) ...[
+                        const SizedBox(height: 12),
+                        const LinearProgressIndicator(),
+                      ],
                     ],
                   ),
                 ),

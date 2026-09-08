@@ -9,7 +9,6 @@ enum ReportPeriod {
   thisMonth('This Month'),
   lastMonth('Last Month'),
   thisYear('This Year'),
-  allTime('All Time'),
   custom('Custom Range');
 
   final String displayName;
@@ -21,8 +20,6 @@ class StockReportItem {
   final List<VehicleExpenseModel> expenses;
   final double totalExpenses;
   final double totalInvested; // purchase + commission + expenses
-  final double expectedSalePrice;
-  final double projectedProfit; // expectedSalePrice - totalInvested
   final int daysInStock;
 
   StockReportItem({
@@ -38,17 +35,6 @@ class StockReportItem {
           ),
           vehicle.commissionAmount,
         ),
-        expectedSalePrice = vehicle.salePrice,
-        projectedProfit = vehicle.salePrice > 0
-            ? vehicle.salePrice -
-                VehicleFinancialCalculator.calculateTotalCost(
-                  vehicle.purchaseAmount,
-                  VehicleFinancialCalculator.calculateTotalExpenses(
-                    expenses.map((e) => e.amount).toList(),
-                  ),
-                  vehicle.commissionAmount,
-                )
-            : 0.0,
         daysInStock = _calcDays(vehicle.purchaseDate);
 
   static int _calcDays(String purchaseDate) {
@@ -138,24 +124,18 @@ class StockSummary {
   final int twoWheelerCount;
   final int fourWheelerCount;
   final double totalInvested;
-  final double totalExpectedValue;
-  final double projectedProfit;
 
   const StockSummary({
     this.totalCount = 0,
     this.twoWheelerCount = 0,
     this.fourWheelerCount = 0,
     this.totalInvested = 0.0,
-    this.totalExpectedValue = 0.0,
-    this.projectedProfit = 0.0,
   });
 
   factory StockSummary.fromItems(List<StockReportItem> items) {
     int twoW = 0;
     int fourW = 0;
     double invested = 0.0;
-    double expectedVal = 0.0;
-    double projProfit = 0.0;
 
     for (final item in items) {
       if (item.vehicle.vehicleType.code == '2W') {
@@ -164,8 +144,6 @@ class StockSummary {
         fourW++;
       }
       invested += item.totalInvested;
-      expectedVal += item.expectedSalePrice;
-      projProfit += item.projectedProfit;
     }
 
     return StockSummary(
@@ -173,8 +151,6 @@ class StockSummary {
       twoWheelerCount: twoW,
       fourWheelerCount: fourW,
       totalInvested: invested,
-      totalExpectedValue: expectedVal,
-      projectedProfit: projProfit,
     );
   }
 }

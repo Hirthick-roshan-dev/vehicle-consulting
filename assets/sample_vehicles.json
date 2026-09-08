@@ -1,0 +1,693 @@
+{
+  "sample_vehicles": [
+    {
+      "vehicle_number": "TN38DEMO01",
+      "vehicle_name": "Toyota Innova Crysta",
+      "vehicle_model": "2.4 GX 7 STR",
+      "vehicle_type": "4W",
+      "owner_name": "Karthik Subramanian",
+      "owner_phone": "9842100001",
+      "manufacturing_year": 2021,
+      "registration_year": 2021,
+      "purchase_date": "2026-08-01",
+      "purchase_amount": 1450000.0,
+      "payment_method": "BANK_TRANSFER",
+      "reference_name": "Senthil Kumar",
+      "commission_amount": 15000.0,
+      "status": "FOR SALE",
+      "notes": "Single owner, showroom maintained, excellent mechanical condition with service records.",
+      "image_asset": "assets/sample_vehicles/toyota_innova.jpg",
+      "expenses": [
+        {
+          "expense_title": "Full Detailing & Teflon",
+          "description": "Exterior compound polishing and ceramic wax",
+          "amount": 6500.0,
+          "expense_date": "2026-08-03"
+        },
+        {
+          "expense_title": "Synthetic Oil Service",
+          "description": "Engine oil, oil filter, and air filter replacement",
+          "amount": 8000.0,
+          "expense_date": "2026-08-05"
+        }
+      ]
+    },
+    {
+      "vehicle_number": "TN38DEMO02",
+      "vehicle_name": "Maruti Suzuki Swift",
+      "vehicle_model": "ZXi Plus Petrol",
+      "vehicle_type": "4W",
+      "owner_name": "Rajesh Kannan",
+      "owner_phone": "9842100002",
+      "manufacturing_year": 2022,
+      "registration_year": 2022,
+      "purchase_date": "2026-08-10",
+      "purchase_amount": 680000.0,
+      "payment_method": "UPI",
+      "reference_name": "Auto Deals",
+      "commission_amount": 8000.0,
+      "status": "FOR SALE",
+      "notes": "Pristine hatchback with smart infotainment, alloy wheels, and zero-dep insurance.",
+      "image_asset": "assets/sample_vehicles/maruti_swift.jpg",
+      "expenses": [
+        {
+          "expense_title": "Interior Deep Cleaning",
+          "description": "Upholstery shampooing and ozone sanitization",
+          "amount": 3000.0,
+          "expense_date": "2026-08-12"
+        },
+        {
+          "expense_title": "Wiper Blade Replacement",
+          "description": "Pair of Bosch frameless wiper blades",
+          "amount": 1200.0,
+          "expense_date": "2026-08-13"
+        }
+      ]
+    },
+    {
+      "vehicle_number": "TN38DEMO03",
+      "vehicle_name": "Royal Enfield Classic 350",
+      "vehicle_model": "Stealth Black Dual ABS",
+      "vehicle_type": "2W",
+      "owner_name": "Vignesh Moorthy",
+      "owner_phone": "9842100003",
+      "manufacturing_year": 2023,
+      "registration_year": 2023,
+      "purchase_date": "2026-08-15",
+      "purchase_amount": 185000.0,
+      "payment_method": "CASH",
+      "reference_name": "Direct Owner",
+      "commission_amount": 3000.0,
+      "status": "FOR SALE",
+      "notes": "Mint condition cruiser with touring seat, crash guard, and new battery.",
+      "image_asset": "assets/sample_vehicles/royal_enfield.jpg",
+      "expenses": [
+        {
+          "expense_title": "Motul Oil & Chain Lube Service",
+          "description": "Periodic engine oil change and chain tension adjustment",
+          "amount": 2200.0,
+          "expense_date": "2026-08-16"
+        },
+        {
+          "expense_title": "Ceramic Coating",
+          "description": "Matte finish ceramic protective layer",
+          "amount": 2500.0,
+          "expense_date": "2026-08-18"
+        }
+      ]
+    },
+    {
+      "vehicle_number": "TN38DEMO04",
+      "vehicle_name": "Hyundai Creta",
+      "vehicle_model": "SX Executive 1.5 Diesel",
+      "vehicle_type": "4W",
+      "owner_name": "Arun Prakash",
+      "owner_phone": "9842100004",
+      "manufacturing_year": 2022,
+      "registration_year": 2022,
+      "purchase_date": "2026-08-05",
+      "purchase_amount": 1120000.0,
+      "payment_method": "BANK_TRANSFER",
+      "reference_name": "Rajendran",
+      "commission_amount": 10000.0,
+      "status": "PARTIAL PAYMENT",
+      "notes": "Compact SUV with panoramic sunroof and touchscreen navigation.",
+      "image_asset": "assets/sample_vehicles/hyundai_creta.jpg",
+      "expenses": [
+        {
+          "expense_title": "Brake Pad Replacement",
+          "description": "Front Bosch ceramic brake pad set",
+          "amount": 3800.0,
+          "expense_date": "2026-08-07"
+        },
+        {
+          "expense_title": "Wheel Alignment & Balancing",
+          "description": "Computerized alignment and weight balancing",
+          "amount": 1500.0,
+          "expense_date": "2026-08-08"
+        }
+      ],
+      "sale": {
+        "customer_name": "Venkatesh Murugan",
+        "customer_phone": "9789012345",
+        "sale_date": "2026-09-02",
+        "payment_type": "PARTIAL",
+        "is_emi": 0,
+        "finance_name": null,
+        "total_amount": 1280000.0,
+        "document_charges": 2500.0,
+        "notes": "Advance ₹5,00,000 received. Balance ₹7,80,000 to be settled on vehicle delivery."
+      },
+      "payments": [
+        {
+          "amount": 500000.0,
+          "payment_date": "2026-09-02",
+          "payment_method": "BANK_TRANSFER",
+          "notes": "Booking advance token payment"
+        }
+      ]
+    },
+    {
+      "vehicle_number": "TN38DEMO05",
+      "vehicle_name": "Honda Activa 6G",
+      "vehicle_model": "DLX Smart Key",
+      "vehicle_type": "2W",
+      "owner_name": "Priya Dharshini",
+      "owner_phone": "9842100005",
+      "manufacturing_year": 2023,
+      "registration_year": 2023,
+      "purchase_date": "2026-08-20",
+      "purchase_amount": 65000.0,
+      "payment_method": "CASH",
+      "reference_name": "Nagarajan",
+      "commission_amount": 1500.0,
+      "status": "PARTIAL PAYMENT",
+      "notes": "Family commuter scooter with smart key, single lady owner, low mileage.",
+      "image_asset": "assets/sample_vehicles/honda_activa.jpg",
+      "expenses": [
+        {
+          "expense_title": "Battery Charging & Service",
+          "description": "Amaron battery check and terminal cleanup",
+          "amount": 1200.0,
+          "expense_date": "2026-08-22"
+        }
+      ],
+      "sale": {
+        "customer_name": "Anand Kumar",
+        "customer_phone": "9894123456",
+        "sale_date": "2026-09-05",
+        "payment_type": "PARTIAL",
+        "is_emi": 0,
+        "finance_name": null,
+        "total_amount": 76000.0,
+        "document_charges": 1000.0,
+        "notes": "Advance ₹35,000 received. Balance ₹41,000 due in 10 days."
+      },
+      "payments": [
+        {
+          "amount": 35000.0,
+          "payment_date": "2026-09-05",
+          "payment_method": "CASH",
+          "notes": "Initial cash advance payment"
+        }
+      ]
+    },
+    {
+      "vehicle_number": "TN38DEMO06",
+      "vehicle_name": "Mahindra Thar",
+      "vehicle_model": "LX Hard Top 4x4 Diesel",
+      "vehicle_type": "4W",
+      "owner_name": "Dinesh Babu",
+      "owner_phone": "9842100006",
+      "manufacturing_year": 2023,
+      "registration_year": 2023,
+      "purchase_date": "2026-07-15",
+      "purchase_amount": 1380000.0,
+      "payment_method": "BANK_TRANSFER",
+      "reference_name": "Auto Friends",
+      "commission_amount": 12000.0,
+      "status": "COMPLETED",
+      "notes": "Hard top off-road edition with custom alloy wheels and bumper upgrade.",
+      "image_asset": "assets/sample_vehicles/mahindra_thar.jpg",
+      "expenses": [
+        {
+          "expense_title": "3M Anti-Rust Underbody Coating",
+          "description": "Heavy duty anti-rust underbody treatment with 5-year warranty",
+          "amount": 5500.0,
+          "expense_date": "2026-07-17"
+        },
+        {
+          "expense_title": "Headlamp LED Upgrade",
+          "description": "High-intensity projector LED bulbs installed",
+          "amount": 4500.0,
+          "expense_date": "2026-07-18"
+        }
+      ],
+      "sale": {
+        "customer_name": "Saravanan Natarajan",
+        "customer_phone": "9944123456",
+        "sale_date": "2026-08-15",
+        "payment_type": "FULL",
+        "is_emi": 1,
+        "finance_name": "HDFC Auto Finance",
+        "total_amount": 1540000.0,
+        "document_charges": 3500.0,
+        "notes": "Down payment ₹3,40,000 received. Balance disbursed by HDFC Bank."
+      },
+      "payments": [
+        {
+          "amount": 340000.0,
+          "payment_date": "2026-08-15",
+          "payment_method": "CASH",
+          "notes": "Down payment received from buyer"
+        },
+        {
+          "amount": 1200000.0,
+          "payment_date": "2026-08-22",
+          "payment_method": "BANK_TRANSFER",
+          "notes": "HDFC Auto Finance payout received in full"
+        }
+      ]
+    },
+    {
+      "vehicle_number": "TN38DEMO07",
+      "vehicle_name": "Honda City",
+      "vehicle_model": "ZX CVT Petrol (5th Gen)",
+      "vehicle_type": "4W",
+      "owner_name": "Murali Krishna",
+      "owner_phone": "9842100007",
+      "manufacturing_year": 2021,
+      "registration_year": 2021,
+      "purchase_date": "2026-07-25",
+      "purchase_amount": 950000.0,
+      "payment_method": "BANK_TRANSFER",
+      "reference_name": "City Motors",
+      "commission_amount": 10000.0,
+      "status": "COMPLETED",
+      "notes": "Premium sedan with leather upholstery, sunroof, and lane-watch camera.",
+      "image_asset": "assets/sample_vehicles/honda_city.jpg",
+      "expenses": [
+        {
+          "expense_title": "Brake Fluid & Coolant Flush",
+          "description": "Complete hydraulic brake fluid and engine coolant replacement",
+          "amount": 3200.0,
+          "expense_date": "2026-07-27"
+        },
+        {
+          "expense_title": "Full Body Rubbing Polish",
+          "description": "3-stage body compound rubbing and paint protection sealant",
+          "amount": 4000.0,
+          "expense_date": "2026-07-28"
+        }
+      ],
+      "sale": {
+        "customer_name": "Sundaramurthy Pillai",
+        "customer_phone": "9443198765",
+        "sale_date": "2026-08-28",
+        "payment_type": "FULL",
+        "is_emi": 0,
+        "finance_name": null,
+        "total_amount": 1080000.0,
+        "document_charges": 2500.0,
+        "notes": "Full direct payment via RTGS and NEFT."
+      },
+      "payments": [
+        {
+          "amount": 200000.0,
+          "payment_date": "2026-08-28",
+          "payment_method": "UPI",
+          "notes": "Token advance"
+        },
+        {
+          "amount": 880000.0,
+          "payment_date": "2026-08-29",
+          "payment_method": "BANK_TRANSFER",
+          "notes": "Final settlement via RTGS"
+        }
+      ]
+    },
+    {
+      "vehicle_number": "TN38DEMO08",
+      "vehicle_name": "Tata Nexon",
+      "vehicle_model": "XZ Plus (O) Dark Edition",
+      "vehicle_type": "4W",
+      "owner_name": "Annamalai Chettiar",
+      "owner_phone": "9842100008",
+      "manufacturing_year": 2022,
+      "registration_year": 2022,
+      "purchase_date": "2026-08-18",
+      "purchase_amount": 980000.0,
+      "payment_method": "BANK_TRANSFER",
+      "reference_name": "Kovai Cars",
+      "commission_amount": 10000.0,
+      "status": "FOR SALE",
+      "notes": "5-star safety rating, Dark edition, sunroof, connected car tech.",
+      "image_asset": "assets/sample_vehicles/tata_nexon.jpg",
+      "expenses": [
+        {
+          "expense_title": "Teflon Wax Coating",
+          "description": "3M body gloss protection treatment",
+          "amount": 4500.0,
+          "expense_date": "2026-08-20"
+        },
+        {
+          "expense_title": "Underbody Sound Deadening",
+          "description": "Wheel arch acoustic insulation dampening",
+          "amount": 3500.0,
+          "expense_date": "2026-08-21"
+        }
+      ]
+    },
+    {
+      "vehicle_number": "TN38DEMO09",
+      "vehicle_name": "Yamaha FZ-S FI",
+      "vehicle_model": "Version 4.0 Deluxe",
+      "vehicle_type": "2W",
+      "owner_name": "Kavin Pradeep",
+      "owner_phone": "9842100009",
+      "manufacturing_year": 2023,
+      "registration_year": 2023,
+      "purchase_date": "2026-08-22",
+      "purchase_amount": 95000.0,
+      "payment_method": "UPI",
+      "reference_name": "City Wheels",
+      "commission_amount": 2000.0,
+      "status": "FOR SALE",
+      "notes": "Traction control, Bluetooth connectivity, single owner college student.",
+      "image_asset": "assets/sample_vehicles/yamaha_fzs.jpg",
+      "expenses": [
+        {
+          "expense_title": "Periodic Service & Synthetic Oil",
+          "description": "Yamalube full synthetic oil change and spark check",
+          "amount": 1800.0,
+          "expense_date": "2026-08-24"
+        },
+        {
+          "expense_title": "Tank Pad & PPF Guard",
+          "description": "Fuel tank scratch guard and grip pads",
+          "amount": 1200.0,
+          "expense_date": "2026-08-25"
+        }
+      ]
+    },
+    {
+      "vehicle_number": "TN38DEMO10",
+      "vehicle_name": "Kia Seltos",
+      "vehicle_model": "HTX 1.5 Diesel Automatic",
+      "vehicle_type": "4W",
+      "owner_name": "Subramaniam V",
+      "owner_phone": "9842100010",
+      "manufacturing_year": 2022,
+      "registration_year": 2022,
+      "purchase_date": "2026-08-08",
+      "purchase_amount": 1250000.0,
+      "payment_method": "BANK_TRANSFER",
+      "reference_name": "Select Auto",
+      "commission_amount": 12000.0,
+      "status": "PARTIAL PAYMENT",
+      "notes": "Top trim automatic SUV, buyer awaiting bank loan disbursement.",
+      "image_asset": "assets/sample_vehicles/kia_seltos.jpg",
+      "expenses": [
+        {
+          "expense_title": "Brake Rotor Polishing",
+          "description": "Front disc skimming and cleaning",
+          "amount": 2500.0,
+          "expense_date": "2026-08-10"
+        },
+        {
+          "expense_title": "Cabin Air Filter & AC Disinfection",
+          "description": "Activated carbon pollen filter and ozone mist",
+          "amount": 1800.0,
+          "expense_date": "2026-08-11"
+        }
+      ],
+      "sale": {
+        "customer_name": "Dr. Manikandan Swamy",
+        "customer_phone": "9786012345",
+        "sale_date": "2026-09-04",
+        "payment_type": "PARTIAL",
+        "is_emi": 1,
+        "finance_name": "ICICI Bank Car Loan",
+        "total_amount": 1420000.0,
+        "document_charges": 3000.0,
+        "notes": "Token advance ₹3,20,000 received. Loan amount ₹11,00,000 pending approval."
+      },
+      "payments": [
+        {
+          "amount": 320000.0,
+          "payment_date": "2026-09-04",
+          "payment_method": "BANK_TRANSFER",
+          "notes": "Initial token & down payment"
+        }
+      ]
+    },
+    {
+      "vehicle_number": "TN38DEMO11",
+      "vehicle_name": "TVS Jupiter",
+      "vehicle_model": "125 Disc SmartXonnect",
+      "vehicle_type": "2W",
+      "owner_name": "Kavitha Rangarajan",
+      "owner_phone": "9842100011",
+      "manufacturing_year": 2023,
+      "registration_year": 2023,
+      "purchase_date": "2026-07-28",
+      "purchase_amount": 62000.0,
+      "payment_method": "CASH",
+      "reference_name": "Sri Ram Auto",
+      "commission_amount": 1500.0,
+      "status": "COMPLETED",
+      "notes": "Front disc brake, huge underseat storage, showroom maintained.",
+      "image_asset": "assets/sample_vehicles/tvs_jupiter.jpg",
+      "expenses": [
+        {
+          "expense_title": "General Tune-up & Spark Plug",
+          "description": "Carburetor tuning, air filter clean, NGK plug",
+          "amount": 950.0,
+          "expense_date": "2026-07-30"
+        },
+        {
+          "expense_title": "Seat Cover & Floor Mat",
+          "description": "Extra padded double-stitched seat cover",
+          "amount": 800.0,
+          "expense_date": "2026-07-31"
+        }
+      ],
+      "sale": {
+        "customer_name": "Balasubramanian G",
+        "customer_phone": "9843219876",
+        "sale_date": "2026-08-20",
+        "payment_type": "FULL",
+        "is_emi": 0,
+        "finance_name": null,
+        "total_amount": 74000.0,
+        "document_charges": 1000.0,
+        "notes": "Full cash settlement upon delivery."
+      },
+      "payments": [
+        {
+          "amount": 20000.0,
+          "payment_date": "2026-08-20",
+          "payment_method": "CASH",
+          "notes": "Advance payment"
+        },
+        {
+          "amount": 54000.0,
+          "payment_date": "2026-08-22",
+          "payment_method": "CASH",
+          "notes": "Final settlement on delivery"
+        }
+      ]
+    },
+    {
+      "vehicle_number": "TN38DEMO12",
+      "vehicle_name": "Maruti Suzuki Baleno",
+      "vehicle_model": "Alpha 1.2 Petrol DualJet",
+      "vehicle_type": "4W",
+      "owner_name": "Chandrasekar M",
+      "owner_phone": "9842100012",
+      "manufacturing_year": 2022,
+      "registration_year": 2022,
+      "purchase_date": "2026-07-10",
+      "purchase_amount": 720000.0,
+      "payment_method": "BANK_TRANSFER",
+      "reference_name": "Kongu Motors",
+      "commission_amount": 8000.0,
+      "status": "COMPLETED",
+      "notes": "Heads-up display, 360 camera, 9-inch SmartPlay Pro+.",
+      "image_asset": "assets/sample_vehicles/maruti_baleno.jpg",
+      "expenses": [
+        {
+          "expense_title": "Ceramic Waxing & Polish",
+          "description": "Paint correction and hydrophobic wax seal",
+          "amount": 3200.0,
+          "expense_date": "2026-07-12"
+        },
+        {
+          "expense_title": "AC Evaporator Coil Cleaning",
+          "description": "Antibacterial foam flush and blower cleaning",
+          "amount": 1800.0,
+          "expense_date": "2026-07-13"
+        }
+      ],
+      "sale": {
+        "customer_name": "Govindarajulu S",
+        "customer_phone": "9894321098",
+        "sale_date": "2026-08-10",
+        "payment_type": "FULL",
+        "is_emi": 0,
+        "finance_name": null,
+        "total_amount": 835000.0,
+        "document_charges": 2500.0,
+        "notes": "Paid in full via RTGS."
+      },
+      "payments": [
+        {
+          "amount": 100000.0,
+          "payment_date": "2026-08-10",
+          "payment_method": "UPI",
+          "notes": "Token booking amount"
+        },
+        {
+          "amount": 735000.0,
+          "payment_date": "2026-08-12",
+          "payment_method": "BANK_TRANSFER",
+          "notes": "Remaining amount settled via RTGS"
+        }
+      ]
+    },
+    {
+      "vehicle_number": "TN38DEMO13",
+      "vehicle_name": "Hero Splendor Plus",
+      "vehicle_model": "i3S Self Cast Drum",
+      "vehicle_type": "2W",
+      "owner_name": "Muthuvel Karunanidhi",
+      "owner_phone": "9842100013",
+      "manufacturing_year": 2022,
+      "registration_year": 2022,
+      "purchase_date": "2026-08-25",
+      "purchase_amount": 58000.0,
+      "payment_method": "CASH",
+      "reference_name": "Local Exchange",
+      "commission_amount": 1500.0,
+      "status": "FOR SALE",
+      "notes": "Highest fuel economy commuter bike, clean engine condition, single owner with original RC.",
+      "image_asset": "assets/sample_vehicles/hero_splendor.jpg",
+      "expenses": [
+        {
+          "expense_title": "Full General Service & Engine Oil",
+          "description": "Castrol 4T oil, spark plug cleaning, carburetor tuning",
+          "amount": 1400.0,
+          "expense_date": "2026-08-26"
+        },
+        {
+          "expense_title": "Rear Brake Shoe Replacement",
+          "description": "Genuine Hero OEM brake shoes",
+          "amount": 650.0,
+          "expense_date": "2026-08-27"
+        }
+      ]
+    },
+    {
+      "vehicle_number": "TN38DEMO14",
+      "vehicle_name": "Bajaj Pulsar 150",
+      "vehicle_model": "Twin Disc ABS",
+      "vehicle_type": "2W",
+      "owner_name": "Gowtham Soundar",
+      "owner_phone": "9842100014",
+      "manufacturing_year": 2021,
+      "registration_year": 2021,
+      "purchase_date": "2026-08-27",
+      "purchase_amount": 72000.0,
+      "payment_method": "UPI",
+      "reference_name": "Direct Owner",
+      "commission_amount": 2000.0,
+      "status": "FOR SALE",
+      "notes": "Sporty 150cc commuter, dual disc brakes, tubeless tyres in 80% thread, smooth gearbox.",
+      "image_asset": "assets/sample_vehicles/bajaj_pulsar.jpg",
+      "expenses": [
+        {
+          "expense_title": "Chain Sprocket Replacement",
+          "description": "Rolon brass-coated chain kit",
+          "amount": 2200.0,
+          "expense_date": "2026-08-28"
+        }
+      ]
+    },
+    {
+      "vehicle_number": "TN38DEMO15",
+      "vehicle_name": "TVS Apache RTR 160 4V",
+      "vehicle_model": "Special Edition Dual ABS",
+      "vehicle_type": "2W",
+      "owner_name": "Saravanan Natarajan",
+      "owner_phone": "9842100015",
+      "manufacturing_year": 2022,
+      "registration_year": 2022,
+      "purchase_date": "2026-08-12",
+      "purchase_amount": 98000.0,
+      "payment_method": "BANK_TRANSFER",
+      "reference_name": "Sri Vari Auto",
+      "commission_amount": 2500.0,
+      "status": "PARTIAL PAYMENT",
+      "notes": "Pearl white finish, performance exhaust, Bluetooth SmartXonnect cluster.",
+      "image_asset": "assets/sample_vehicles/tvs_apache.jpg",
+      "expenses": [
+        {
+          "expense_title": "Front Fork Oil Seal & Service",
+          "description": "Fork seals replaced and fresh fork oil",
+          "amount": 1800.0,
+          "expense_date": "2026-08-14"
+        }
+      ],
+      "sale": {
+        "customer_name": "Dinesh Balaji",
+        "customer_phone": "9842200015",
+        "sale_date": "2026-08-28",
+        "payment_type": "CASH",
+        "is_emi": 0,
+        "finance_name": null,
+        "total_amount": 118000.0,
+        "document_charges": 2000.0,
+        "notes": "Advance ₹75,000 paid in cash. Remaining balance ₹43,000 due within 15 days upon RC name transfer."
+      },
+      "payments": [
+        {
+          "amount": 75000.0,
+          "payment_date": "2026-08-28",
+          "payment_method": "CASH",
+          "notes": "Token advance payment"
+        }
+      ]
+    },
+    {
+      "vehicle_number": "TN38DEMO16",
+      "vehicle_name": "Suzuki Access 125",
+      "vehicle_model": "Ride Connect Edition Disc Alloy",
+      "vehicle_type": "2W",
+      "owner_name": "Anitha Vijayakumar",
+      "owner_phone": "9842100016",
+      "manufacturing_year": 2023,
+      "registration_year": 2023,
+      "purchase_date": "2026-08-05",
+      "purchase_amount": 68000.0,
+      "payment_method": "UPI",
+      "reference_name": "Direct Owner",
+      "commission_amount": 1500.0,
+      "status": "COMPLETED",
+      "notes": "Royal metallic blue, Bluetooth digital console, lady owner driven, immaculate condition.",
+      "image_asset": "assets/sample_vehicles/suzuki_access.jpg",
+      "expenses": [
+        {
+          "expense_title": "Full Body Polish & Mirror Set",
+          "description": "Chrome mirror set and 3M polish",
+          "amount": 1600.0,
+          "expense_date": "2026-08-06"
+        }
+      ],
+      "sale": {
+        "customer_name": "Priyadarshini Sundaram",
+        "customer_phone": "9842200016",
+        "sale_date": "2026-08-20",
+        "payment_type": "UPI",
+        "is_emi": 0,
+        "finance_name": null,
+        "total_amount": 82000.0,
+        "document_charges": 2500.0,
+        "notes": "Fully paid, RC name transfer completed to Pollachi RTO."
+      },
+      "payments": [
+        {
+          "amount": 50000.0,
+          "payment_date": "2026-08-20",
+          "payment_method": "UPI",
+          "notes": "Booking advance payment"
+        },
+        {
+          "amount": 32000.0,
+          "payment_date": "2026-08-24",
+          "payment_method": "UPI",
+          "notes": "Final settlement upon delivery"
+        }
+      ]
+    }
+  ]
+}

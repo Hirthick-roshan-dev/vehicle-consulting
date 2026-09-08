@@ -1,6 +1,6 @@
 class DatabaseConstants {
   static const String dbName = 'vehicle_consulting.db';
-  static const int dbVersion = 4;
+  static const int dbVersion = 5;
 
   // Tables
   static const String tableUsers = 'users';
