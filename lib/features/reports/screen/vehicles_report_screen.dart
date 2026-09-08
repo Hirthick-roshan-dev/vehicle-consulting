@@ -8,6 +8,7 @@ import '../../../core/widgets/empty_state.dart';
 import '../../../core/widgets/loading_widget.dart';
 import '../../auth/provider/auth_provider.dart';
 import '../../sales_vehicles/model/vehicle_type.dart';
+import '../../sales_vehicles/screen/vehicle_details_screen.dart';
 import '../model/report_models.dart';
 import '../provider/report_provider.dart';
 
@@ -786,6 +787,7 @@ class _VehiclesReportScreenState extends ConsumerState<VehiclesReportScreen>
               Expanded(flex: 2, child: Text('SELLING PRICE', style: _tableHeaderStyle)),
               Expanded(flex: 2, child: Text('NET PROFIT / LOSS', style: _tableHeaderStyle)),
               Expanded(flex: 2, child: Text('PAYMENT STATUS', style: _tableHeaderStyle)),
+              SizedBox(width: 24),
             ],
           ),
         ),        // Sales List
@@ -811,193 +813,217 @@ class _VehiclesReportScreenState extends ConsumerState<VehiclesReportScreen>
                         final item = paginatedSales[index];
                         final isProfit = item.profitLoss >= 0;
 
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                          child: Row(
-                            children: [
-                              // Vehicle & Customer
-                              Expanded(
-                                flex: 3,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Text(
-                                          item.vehicle.vehicleNumber,
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 13,
-                                            color: AppColors.primaryText,
-                                          ),
-                                        ),
-                                        const SizedBox(width: 6),
-                                        Container(
-                                          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
-                                          decoration: BoxDecoration(
-                                            color: AppColors.secondary.withValues(alpha: 0.1),
-                                            borderRadius: BorderRadius.circular(4),
-                                          ),
-                                          child: Text(
-                                            item.vehicle.vehicleType.code,
-                                            style: const TextStyle(
-                                              fontSize: 10,
-                                              fontWeight: FontWeight.bold,
-                                              color: AppColors.secondary,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 2),
-                                    Text(
-                                      '${item.vehicle.vehicleName} • Customer: ${item.sale.customerName}',
-                                      style: const TextStyle(
-                                        fontSize: 12.5,
-                                        fontWeight: FontWeight.w600,
-                                        color: Color(0xFF334155),
+                        return InkWell(
+                          onTap: item.vehicle.id != null
+                              ? () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (ctx) => VehicleDetailsScreen(
+                                        vehicleId: item.vehicle.id!,
                                       ),
-                                      overflow: TextOverflow.ellipsis,
                                     ),
-                                  ],
-                                ),
-                              ),
-
-                              // Sale Date
-                              Expanded(
-                                flex: 2,
-                                child: Text(
-                                  AppDateUtils.formatDisplay(item.saleDate),
-                                  style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.primaryText),
-                                ),
-                              ),
-
-                              // Purchase Cost
-                              Expanded(
-                                flex: 2,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      CurrencyUtils.format(item.vehicle.purchaseAmount),
-                                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
-                                    ),
-                                    if (item.vehicle.commissionAmount > 0)
-                                      Text(
-                                        '+${CurrencyUtils.format(item.vehicle.commissionAmount)} comm.',
-                                        style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Color(0xFF64748B)),
-                                      ),
-                                  ],
-                                ),
-                              ),
-
-                              // Expenses
-                              Expanded(
-                                flex: 2,
-                                child: Text(
-                                  CurrencyUtils.format(item.totalExpenses),
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w600,
-                                    color: item.totalExpenses > 0
-                                        ? const Color(0xFFD97706)
-                                        : AppColors.secondaryText,
-                                  ),
-                                ),
-                              ),
-
-                              // Selling Price
-                              Expanded(
-                                flex: 2,
-                                child: Text(
-                                  CurrencyUtils.format(item.sale.totalAmount),
-                                  style: const TextStyle(
-                                    fontSize: 13.5,
-                                    fontWeight: FontWeight.w800,
-                                    color: AppColors.primaryText,
-                                  ),
-                                ),
-                              ),
-
-                              // Net Profit / Loss
-                              Expanded(
-                                flex: 2,
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      isProfit ? Icons.trending_up : Icons.trending_down,
-                                      size: 16,
-                                      color: isProfit ? AppColors.profit : AppColors.loss,
-                                    ),
-                                    const SizedBox(width: 4),
-                                    Flexible(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                  ).then((_) {
+                                    ref.invalidate(vehiclesReportDataProvider);
+                                  });
+                                }
+                              : null,
+                          hoverColor: AppColors.primary.withValues(alpha: 0.04),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                            child: Row(
+                              children: [
+                                // Vehicle & Customer
+                                Expanded(
+                                  flex: 3,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
                                         children: [
                                           Text(
-                                            CurrencyUtils.format(item.profitLoss),
-                                            style: TextStyle(
+                                            item.vehicle.vehicleNumber,
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
                                               fontSize: 13,
-                                              fontWeight: FontWeight.w800,
-                                              color: isProfit ? AppColors.profit : AppColors.loss,
+                                              color: AppColors.primaryText,
                                             ),
                                           ),
-                                          Text(
-                                            '${isProfit ? '+' : ''}${item.profitMarginPercent.toStringAsFixed(1)}% margin',
-                                            style: TextStyle(
-                                              fontSize: 11,
-                                              fontWeight: FontWeight.bold,
-                                              color: isProfit ? AppColors.profit : AppColors.loss,
+                                          const SizedBox(width: 6),
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+                                            decoration: BoxDecoration(
+                                              color: AppColors.secondary.withValues(alpha: 0.1),
+                                              borderRadius: BorderRadius.circular(4),
+                                            ),
+                                            child: Text(
+                                              item.vehicle.vehicleType.code,
+                                              style: const TextStyle(
+                                                fontSize: 10,
+                                                fontWeight: FontWeight.bold,
+                                                color: AppColors.secondary,
+                                              ),
                                             ),
                                           ),
                                         ],
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-
-                              // Payment Status
-                              Expanded(
-                                flex: 2,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
-                                      decoration: BoxDecoration(
-                                        color: (item.balance <= 0
-                                                ? AppColors.profit
-                                                : AppColors.partialPayment)
-                                            .withValues(alpha: 0.12),
-                                        borderRadius: BorderRadius.circular(4),
-                                      ),
-                                      child: Text(
-                                        item.balance <= 0 ? 'Fully Paid' : 'Partial Paid',
-                                        style: TextStyle(
-                                          fontSize: 11,
-                                          fontWeight: FontWeight.bold,
-                                          color: item.balance <= 0
-                                              ? AppColors.profit
-                                              : AppColors.partialPayment,
-                                        ),
-                                      ),
-                                    ),
-                                    if (item.balance > 0) ...[
                                       const SizedBox(height: 2),
                                       Text(
-                                        'Bal: ${CurrencyUtils.format(item.balance)}',
+                                        '${item.vehicle.vehicleName} • Customer: ${item.sale.customerName}',
                                         style: const TextStyle(
-                                          fontSize: 11.5,
-                                          fontWeight: FontWeight.w800,
-                                          color: AppColors.partialPayment,
+                                          fontSize: 12.5,
+                                          fontWeight: FontWeight.w600,
+                                          color: Color(0xFF334155),
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                                // Sale Date
+                                Expanded(
+                                  flex: 2,
+                                  child: Text(
+                                    AppDateUtils.formatDisplay(item.saleDate),
+                                    style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.primaryText),
+                                  ),
+                                ),
+
+                                // Purchase Cost
+                                Expanded(
+                                  flex: 2,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        CurrencyUtils.format(item.vehicle.purchaseAmount),
+                                        style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
+                                      ),
+                                      if (item.vehicle.commissionAmount > 0)
+                                        Text(
+                                          '+${CurrencyUtils.format(item.vehicle.commissionAmount)} comm.',
+                                          style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Color(0xFF64748B)),
+                                        ),
+                                    ],
+                                  ),
+                                ),
+
+                                // Expenses
+                                Expanded(
+                                  flex: 2,
+                                  child: Text(
+                                    CurrencyUtils.format(item.totalExpenses),
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600,
+                                      color: item.totalExpenses > 0
+                                          ? const Color(0xFFD97706)
+                                          : AppColors.secondaryText,
+                                    ),
+                                  ),
+                                ),
+
+                                // Selling Price
+                                Expanded(
+                                  flex: 2,
+                                  child: Text(
+                                    CurrencyUtils.format(item.sale.totalAmount),
+                                    style: const TextStyle(
+                                      fontSize: 13.5,
+                                      fontWeight: FontWeight.w800,
+                                      color: AppColors.primaryText,
+                                    ),
+                                  ),
+                                ),
+
+                                // Net Profit / Loss
+                                Expanded(
+                                  flex: 2,
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        isProfit ? Icons.trending_up : Icons.trending_down,
+                                        size: 16,
+                                        color: isProfit ? AppColors.profit : AppColors.loss,
+                                      ),
+                                      const SizedBox(width: 4),
+                                      Flexible(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              CurrencyUtils.format(item.profitLoss),
+                                              style: TextStyle(
+                                                fontSize: 13,
+                                                fontWeight: FontWeight.w800,
+                                                color: isProfit ? AppColors.profit : AppColors.loss,
+                                              ),
+                                            ),
+                                            Text(
+                                              '${isProfit ? '+' : ''}${item.profitMarginPercent.toStringAsFixed(1)}% margin',
+                                              style: TextStyle(
+                                                fontSize: 11,
+                                                fontWeight: FontWeight.bold,
+                                                color: isProfit ? AppColors.profit : AppColors.loss,
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ],
-                                  ],
+                                  ),
                                 ),
-                              ),
-                            ],
+
+                                // Payment Status
+                                Expanded(
+                                  flex: 2,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+                                        decoration: BoxDecoration(
+                                          color: (item.balance <= 0
+                                                  ? AppColors.profit
+                                                  : AppColors.partialPayment)
+                                              .withValues(alpha: 0.12),
+                                          borderRadius: BorderRadius.circular(4),
+                                        ),
+                                        child: Text(
+                                          item.balance <= 0 ? 'Fully Paid' : 'Partial Paid',
+                                          style: TextStyle(
+                                            fontSize: 11,
+                                            fontWeight: FontWeight.bold,
+                                            color: item.balance <= 0
+                                                ? AppColors.profit
+                                                : AppColors.partialPayment,
+                                          ),
+                                        ),
+                                      ),
+                                      if (item.balance > 0) ...[
+                                        const SizedBox(height: 2),
+                                        Text(
+                                          'Bal: ${CurrencyUtils.format(item.balance)}',
+                                          style: const TextStyle(
+                                            fontSize: 11.5,
+                                            fontWeight: FontWeight.w800,
+                                            color: AppColors.partialPayment,
+                                          ),
+                                        ),
+                                      ],
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 24,
+                                  child: Icon(
+                                    Icons.chevron_right,
+                                    size: 18,
+                                    color: Color(0xFF94A3B8),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         );
                       },
@@ -1100,6 +1126,7 @@ class _VehiclesReportScreenState extends ConsumerState<VehiclesReportScreen>
               Expanded(flex: 2, child: Text('PURCHASE PRICE', style: _tableHeaderStyle)),
               Expanded(flex: 2, child: Text('CURRENT EXPENSES', style: _tableHeaderStyle)),
               Expanded(flex: 2, child: Text('TOTAL INVESTED', style: _tableHeaderStyle)),
+              SizedBox(width: 24),
             ],
           ),
         ),
@@ -1113,128 +1140,152 @@ class _VehiclesReportScreenState extends ConsumerState<VehiclesReportScreen>
               final item = paginatedStock[index];
               final isAging = item.daysInStock > 30;
 
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                child: Row(
-                  children: [
-                    // Vehicle Details
-                    Expanded(
-                      flex: 3,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                item.vehicle.vehicleNumber,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 13,
-                                  color: AppColors.primaryText,
-                                ),
-                              ),
-                              const SizedBox(width: 6),
-                              Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
-                                decoration: BoxDecoration(
-                                  color: AppColors.secondary.withValues(alpha: 0.1),
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                                child: Text(
-                                  item.vehicle.vehicleType.code,
+              return InkWell(
+                onTap: item.vehicle.id != null
+                    ? () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (ctx) => VehicleDetailsScreen(
+                              vehicleId: item.vehicle.id!,
+                            ),
+                          ),
+                        ).then((_) {
+                          ref.invalidate(vehiclesReportDataProvider);
+                        });
+                      }
+                    : null,
+                hoverColor: AppColors.primary.withValues(alpha: 0.04),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  child: Row(
+                    children: [
+                      // Vehicle Details
+                      Expanded(
+                        flex: 3,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  item.vehicle.vehicleNumber,
                                   style: const TextStyle(
-                                    fontSize: 10,
                                     fontWeight: FontWeight.bold,
-                                    color: AppColors.secondary,
+                                    fontSize: 13,
+                                    color: AppColors.primaryText,
                                   ),
                                 ),
+                                const SizedBox(width: 6),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.secondary.withValues(alpha: 0.1),
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                  child: Text(
+                                    item.vehicle.vehicleType.code,
+                                    style: const TextStyle(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColors.secondary,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              '${item.vehicle.vehicleName} (${item.vehicle.manufacturingYear}) • ${item.vehicle.ownerName}',
+                              style: const TextStyle(
+                                fontSize: 12.5,
+                                fontWeight: FontWeight.w600,
+                                color: Color(0xFF334155),
                               ),
-                            ],
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            '${item.vehicle.vehicleName} (${item.vehicle.manufacturingYear}) • ${item.vehicle.ownerName}',
-                            style: const TextStyle(
-                              fontSize: 12.5,
-                              fontWeight: FontWeight.w600,
-                              color: Color(0xFF334155),
+                              overflow: TextOverflow.ellipsis,
                             ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    // Purchase Date
-                    Expanded(
-                      flex: 2,
-                      child: Text(
-                        AppDateUtils.formatDisplay(item.vehicle.purchaseDate),
-                        style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.primaryText),
-                      ),
-                    ),
-
-                    // Stock Duration (Days in Yard)
-                    Expanded(
-                      flex: 2,
-                      child: Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                            decoration: BoxDecoration(
-                              color: isAging
-                                  ? AppColors.loss.withValues(alpha: 0.1)
-                                  : AppColors.primary.withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: Text(
-                              '${item.daysInStock} days',
-                              style: TextStyle(
-                                fontSize: 11.5,
-                                fontWeight: FontWeight.bold,
-                                color: isAging ? AppColors.loss : AppColors.primary,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    // Purchase Price
-                    Expanded(
-                      flex: 2,
-                      child: Text(
-                        CurrencyUtils.format(item.vehicle.purchaseAmount),
-                        style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
-                      ),
-                    ),
-
-                    // Current Expenses
-                    Expanded(
-                      flex: 2,
-                      child: Text(
-                        CurrencyUtils.format(item.totalExpenses),
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: item.totalExpenses > 0 ? const Color(0xFFD97706) : AppColors.secondaryText,
+                          ],
                         ),
                       ),
-                    ),
 
-                    // Total Invested
-                    Expanded(
-                      flex: 2,
-                      child: Text(
-                        CurrencyUtils.format(item.totalInvested),
-                        style: const TextStyle(
-                          fontSize: 13.5,
-                          fontWeight: FontWeight.w800,
-                          color: AppColors.primaryText,
+                      // Purchase Date
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          AppDateUtils.formatDisplay(item.vehicle.purchaseDate),
+                          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.primaryText),
                         ),
                       ),
-                    ),
-                  ],
+
+                      // Stock Duration (Days in Yard)
+                      Expanded(
+                        flex: 2,
+                        child: Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                              decoration: BoxDecoration(
+                                color: isAging
+                                    ? AppColors.loss.withValues(alpha: 0.1)
+                                    : AppColors.primary.withValues(alpha: 0.1),
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: Text(
+                                '${item.daysInStock} days',
+                                style: TextStyle(
+                                  fontSize: 11.5,
+                                  fontWeight: FontWeight.bold,
+                                  color: isAging ? AppColors.loss : AppColors.primary,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      // Purchase Price
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          CurrencyUtils.format(item.vehicle.purchaseAmount),
+                          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
+                        ),
+                      ),
+
+                      // Current Expenses
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          CurrencyUtils.format(item.totalExpenses),
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            color: item.totalExpenses > 0 ? const Color(0xFFD97706) : AppColors.secondaryText,
+                          ),
+                        ),
+                      ),
+
+                      // Total Invested
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          CurrencyUtils.format(item.totalInvested),
+                          style: const TextStyle(
+                            fontSize: 13.5,
+                            fontWeight: FontWeight.w800,
+                            color: AppColors.primaryText,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 24,
+                        child: Icon(
+                          Icons.chevron_right,
+                          size: 18,
+                          color: Color(0xFF94A3B8),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               );
             },
