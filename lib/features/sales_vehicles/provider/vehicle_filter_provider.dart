@@ -36,7 +36,7 @@ class VehicleFilterNotifier extends StateNotifier<VehicleFilterState> {
   }
 
   void setTypeFilter(VehicleType? type) {
-    if (type == state.typeFilter) {
+    if (type == null || type == state.typeFilter) {
       state = state.copyWith(clearType: true);
     } else {
       state = state.copyWith(typeFilter: type);
@@ -44,7 +44,7 @@ class VehicleFilterNotifier extends StateNotifier<VehicleFilterState> {
   }
 
   void setStatusFilter(VehicleStatus? status) {
-    if (status == state.statusFilter) {
+    if (status == null || status == state.statusFilter) {
       state = state.copyWith(clearStatus: true);
     } else {
       state = state.copyWith(statusFilter: status);

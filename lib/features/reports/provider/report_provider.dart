@@ -32,8 +32,6 @@ class ReportFilterState {
         return DateTime(now.year, now.month - 1, 1);
       case ReportPeriod.thisYear:
         return DateTime(now.year, 1, 1);
-      case ReportPeriod.allTime:
-        return null;
       case ReportPeriod.custom:
         return customStartDate;
     }
@@ -51,8 +49,6 @@ class ReportFilterState {
         return DateTime(now.year, now.month, 0, 23, 59, 59);
       case ReportPeriod.thisYear:
         return DateTime(now.year, 12, 31, 23, 59, 59);
-      case ReportPeriod.allTime:
-        return null;
       case ReportPeriod.custom:
         return customEndDate != null
             ? DateTime(customEndDate!.year, customEndDate!.month, customEndDate!.day, 23, 59, 59)
@@ -88,8 +84,6 @@ class VehiclesReportBundle {
   final ProfitSummary periodProfitSummary;
   final List<SalesReportItem> periodSalesItems;
 
-  final ProfitSummary overallProfitSummary;
-
   VehiclesReportBundle({
     required this.stockSummary,
     required this.stockItems,
@@ -97,7 +91,6 @@ class VehiclesReportBundle {
     required this.monthlyProfitSummary,
     required this.periodProfitSummary,
     required this.periodSalesItems,
-    required this.overallProfitSummary,
   });
 }
 
@@ -116,10 +109,7 @@ final vehiclesReportDataProvider =
   // 3. Monthly profit (for current calendar month)
   final monthlySummary = await repo.getMonthlyProfitSummary(filterType: filter.typeFilter);
 
-  // 4. Overall profit (all time)
-  final overallSummary = await repo.getOverallProfitSummary(filterType: filter.typeFilter);
-
-  // 5. Period sales items (based on selected period & date range)
+  // 4. Period sales items (based on selected period & date range)
   final periodSalesItems = await repo.getSalesItems(
     startDate: filter.effectiveStartDate,
     endDate: filter.effectiveEndDate,
@@ -134,6 +124,5 @@ final vehiclesReportDataProvider =
     monthlyProfitSummary: monthlySummary,
     periodProfitSummary: periodProfitSummary,
     periodSalesItems: periodSalesItems,
-    overallProfitSummary: overallSummary,
   );
 });

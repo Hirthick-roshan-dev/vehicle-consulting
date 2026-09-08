@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/theme/app_colors.dart';
@@ -20,6 +21,10 @@ class VehiclesReportScreen extends ConsumerStatefulWidget {
 class _VehiclesReportScreenState extends ConsumerState<VehiclesReportScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  int _salesPage = 1;
+  static const int _salesPageSize = 8;
+  int _stockPage = 1;
+  static const int _stockPageSize = 8;
 
   @override
   void initState() {
@@ -235,6 +240,10 @@ class _VehiclesReportScreenState extends ConsumerState<VehiclesReportScreen>
                         ),
                       ],
                       onChanged: (val) {
+                        setState(() {
+                          _salesPage = 1;
+                          _stockPage = 1;
+                        });
                         ref.read(reportFilterProvider.notifier).state = filter.copyWith(
                           typeFilter: val,
                           clearType: val == null,
@@ -246,7 +255,13 @@ class _VehiclesReportScreenState extends ConsumerState<VehiclesReportScreen>
                 const SizedBox(width: 10),
                 // Refresh Button
                 OutlinedButton.icon(
-                  onPressed: () => ref.refresh(vehiclesReportDataProvider),
+                  onPressed: () {
+                    setState(() {
+                      _salesPage = 1;
+                      _stockPage = 1;
+                    });
+                    ref.invalidate(vehiclesReportDataProvider);
+                  },
                   icon: const Icon(Icons.refresh, size: 16),
                   label: const Text('Refresh'),
                   style: OutlinedButton.styleFrom(
@@ -287,6 +302,7 @@ class _VehiclesReportScreenState extends ConsumerState<VehiclesReportScreen>
                     color: isSelected ? Colors.white : AppColors.primaryText,
                   ),
                   onSelected: (selected) {
+                    setState(() => _salesPage = 1);
                     if (p == ReportPeriod.custom) {
                       _selectCustomDateRange(context);
                     } else {
@@ -422,15 +438,12 @@ class _VehiclesReportScreenState extends ConsumerState<VehiclesReportScreen>
                 value: CurrencyUtils.format(bundle.stockSummary.totalInvested),
               ),
               _KpiMetricRow(
-                label: 'Expected Value',
-                value: CurrencyUtils.format(bundle.stockSummary.totalExpectedValue),
+                label: 'Two-Wheelers (2W)',
+                value: '${bundle.stockSummary.twoWheelerCount} Units',
               ),
               _KpiMetricRow(
-                label: 'Projected Profit',
-                value: CurrencyUtils.format(bundle.stockSummary.projectedProfit),
-                valueColor: bundle.stockSummary.projectedProfit >= 0
-                    ? AppColors.profit
-                    : AppColors.loss,
+                label: 'Four-Wheelers (4W)',
+                value: '${bundle.stockSummary.fourWheelerCount} Units',
               ),
             ],
           ),
@@ -774,202 +787,229 @@ class _VehiclesReportScreenState extends ConsumerState<VehiclesReportScreen>
               Expanded(flex: 2, child: Text('PAYMENT STATUS', style: _tableHeaderStyle)),
             ],
           ),
-        ),
+        ),        // Sales List
+        Builder(
+          builder: (context) {
+            final totalSalesCount = bundle.periodSalesItems.length;
+            final totalSalesPages = (totalSalesCount / _salesPageSize).ceil() == 0
+                ? 1
+                : (totalSalesCount / _salesPageSize).ceil();
+            final safeSalesPage = _salesPage.clamp(1, totalSalesPages);
+            final salesStart = (safeSalesPage - 1) * _salesPageSize;
+            final salesEnd = min(salesStart + _salesPageSize, totalSalesCount);
+            final paginatedSales = bundle.periodSalesItems.sublist(salesStart, salesEnd);
 
-        // Sales List
-        Expanded(
-          child: ListView.separated(
-            itemCount: bundle.periodSalesItems.length,
-            separatorBuilder: (ctx, i) => const Divider(height: 1, color: AppColors.border),
-            itemBuilder: (context, index) {
-              final item = bundle.periodSalesItems[index];
-              final isProfit = item.profitLoss >= 0;
+            return Expanded(
+              child: Column(
+                children: [
+                  Expanded(
+                    child: ListView.separated(
+                      itemCount: paginatedSales.length,
+                      separatorBuilder: (ctx, i) => const Divider(height: 1, color: AppColors.border),
+                      itemBuilder: (context, index) {
+                        final item = paginatedSales[index];
+                        final isProfit = item.profitLoss >= 0;
 
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                child: Row(
-                  children: [
-                    // Vehicle & Customer
-                    Expanded(
-                      flex: 3,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                          child: Row(
                             children: [
-                              Text(
-                                item.vehicle.vehicleNumber,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 13,
-                                  color: AppColors.primaryText,
+                              // Vehicle & Customer
+                              Expanded(
+                                flex: 3,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Text(
+                                          item.vehicle.vehicleNumber,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 13,
+                                            color: AppColors.primaryText,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 6),
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+                                          decoration: BoxDecoration(
+                                            color: AppColors.secondary.withValues(alpha: 0.1),
+                                            borderRadius: BorderRadius.circular(4),
+                                          ),
+                                          child: Text(
+                                            item.vehicle.vehicleType.code,
+                                            style: const TextStyle(
+                                              fontSize: 10,
+                                              fontWeight: FontWeight.bold,
+                                              color: AppColors.secondary,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      '${item.vehicle.vehicleName} • Customer: ${item.sale.customerName}',
+                                      style: const TextStyle(
+                                        fontSize: 11,
+                                        color: Color(0xFF475569),
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
                                 ),
                               ),
-                              const SizedBox(width: 6),
-                              Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
-                                decoration: BoxDecoration(
-                                  color: AppColors.secondary.withValues(alpha: 0.1),
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
+
+                              // Sale Date
+                              Expanded(
+                                flex: 2,
                                 child: Text(
-                                  item.vehicle.vehicleType.code,
-                                  style: const TextStyle(
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.bold,
-                                    color: AppColors.secondary,
+                                  AppDateUtils.formatDisplay(item.saleDate),
+                                  style: const TextStyle(fontSize: 12, color: AppColors.primaryText),
+                                ),
+                              ),
+
+                              // Purchase Cost
+                              Expanded(
+                                flex: 2,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      CurrencyUtils.format(item.vehicle.purchaseAmount),
+                                      style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                                    ),
+                                    if (item.vehicle.commissionAmount > 0)
+                                      Text(
+                                        '+${CurrencyUtils.format(item.vehicle.commissionAmount)} comm.',
+                                        style: const TextStyle(fontSize: 10, color: Color(0xFF64748B)),
+                                      ),
+                                  ],
+                                ),
+                              ),
+
+                              // Expenses
+                              Expanded(
+                                flex: 2,
+                                child: Text(
+                                  CurrencyUtils.format(item.totalExpenses),
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    color: item.totalExpenses > 0
+                                        ? const Color(0xFFD97706)
+                                        : AppColors.secondaryText,
                                   ),
+                                ),
+                              ),
+
+                              // Selling Price
+                              Expanded(
+                                flex: 2,
+                                child: Text(
+                                  CurrencyUtils.format(item.sale.totalAmount),
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.primaryText,
+                                  ),
+                                ),
+                              ),
+
+                              // Net Profit / Loss
+                              Expanded(
+                                flex: 2,
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      isProfit ? Icons.trending_up : Icons.trending_down,
+                                      size: 16,
+                                      color: isProfit ? AppColors.profit : AppColors.loss,
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Flexible(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            CurrencyUtils.format(item.profitLoss),
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold,
+                                              color: isProfit ? AppColors.profit : AppColors.loss,
+                                            ),
+                                          ),
+                                          Text(
+                                            '${isProfit ? '+' : ''}${item.profitMarginPercent.toStringAsFixed(1)}% margin',
+                                            style: TextStyle(
+                                              fontSize: 9,
+                                              fontWeight: FontWeight.bold,
+                                              color: isProfit ? AppColors.profit : AppColors.loss,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+
+                              // Payment Status
+                              Expanded(
+                                flex: 2,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                      decoration: BoxDecoration(
+                                        color: (item.balance <= 0
+                                                ? AppColors.profit
+                                                : AppColors.partialPayment)
+                                            .withValues(alpha: 0.12),
+                                        borderRadius: BorderRadius.circular(4),
+                                      ),
+                                      child: Text(
+                                        item.balance <= 0 ? 'Fully Paid' : 'Partial Paid',
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.bold,
+                                          color: item.balance <= 0
+                                              ? AppColors.profit
+                                              : AppColors.partialPayment,
+                                        ),
+                                      ),
+                                    ),
+                                    if (item.balance > 0)
+                                      Text(
+                                        'Bal: ${CurrencyUtils.format(item.balance)}',
+                                        style: const TextStyle(
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.bold,
+                                          color: AppColors.partialPayment,
+                                        ),
+                                      ),
+                                  ],
                                 ),
                               ),
                             ],
                           ),
-                          const SizedBox(height: 2),
-                          Text(
-                            '${item.vehicle.vehicleName} • Customer: ${item.sale.customerName}',
-                            style: const TextStyle(
-                              fontSize: 11,
-                              color: Color(0xFF475569),
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
+                        );
+                      },
                     ),
-
-                    // Sale Date
-                    Expanded(
-                      flex: 2,
-                      child: Text(
-                        AppDateUtils.formatDisplay(item.saleDate),
-                        style: const TextStyle(fontSize: 12, color: AppColors.primaryText),
-                      ),
+                  ),
+                  if (totalSalesCount > _salesPageSize)
+                    _buildTablePaginationBar(
+                      currentPage: safeSalesPage,
+                      totalCount: totalSalesCount,
+                      pageSize: _salesPageSize,
+                      onPageChanged: (newPage) => setState(() => _salesPage = newPage),
                     ),
-
-                    // Purchase Cost
-                    Expanded(
-                      flex: 2,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            CurrencyUtils.format(item.vehicle.purchaseAmount),
-                            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
-                          ),
-                          if (item.vehicle.commissionAmount > 0)
-                            Text(
-                              '+${CurrencyUtils.format(item.vehicle.commissionAmount)} comm.',
-                              style: const TextStyle(fontSize: 10, color: Color(0xFF64748B)),
-                            ),
-                        ],
-                      ),
-                    ),
-
-                    // Expenses
-                    Expanded(
-                      flex: 2,
-                      child: Text(
-                        CurrencyUtils.format(item.totalExpenses),
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                          color: item.totalExpenses > 0 ? const Color(0xFFD97706) : AppColors.secondaryText,
-                        ),
-                      ),
-                    ),
-
-                    // Selling Price
-                    Expanded(
-                      flex: 2,
-                      child: Text(
-                        CurrencyUtils.format(item.sale.totalAmount),
-                        style: const TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.primaryText,
-                        ),
-                      ),
-                    ),
-
-                    // Net Profit / Loss
-                    Expanded(
-                      flex: 2,
-                      child: Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                            decoration: BoxDecoration(
-                              color: (isProfit ? AppColors.profit : AppColors.loss).withValues(alpha: 0.12),
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  '${isProfit ? '+' : ''}${CurrencyUtils.format(item.profitLoss)}',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                    color: isProfit ? AppColors.profit : AppColors.loss,
-                                  ),
-                                ),
-                                Text(
-                                  '${isProfit ? '+' : ''}${item.profitMarginPercent.toStringAsFixed(1)}% margin',
-                                  style: TextStyle(
-                                    fontSize: 9,
-                                    fontWeight: FontWeight.bold,
-                                    color: isProfit ? AppColors.profit : AppColors.loss,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    // Payment Status
-                    Expanded(
-                      flex: 2,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                            decoration: BoxDecoration(
-                              color: (item.balance <= 0
-                                      ? AppColors.profit
-                                      : AppColors.partialPayment)
-                                  .withValues(alpha: 0.12),
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: Text(
-                              item.balance <= 0 ? 'Fully Paid' : 'Partial Paid',
-                              style: TextStyle(
-                                fontSize: 10,
-                                fontWeight: FontWeight.bold,
-                                color: item.balance <= 0
-                                    ? AppColors.profit
-                                    : AppColors.partialPayment,
-                              ),
-                            ),
-                          ),
-                          if (item.balance > 0)
-                            Text(
-                              'Bal: ${CurrencyUtils.format(item.balance)}',
-                              style: const TextStyle(
-                                fontSize: 10,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.partialPayment,
-                              ),
-                            ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
+                ],
+              ),
+            );
+          },
         ),
       ],
     );
@@ -985,6 +1025,12 @@ class _VehiclesReportScreenState extends ConsumerState<VehiclesReportScreen>
         ),
       );
     }
+
+    final totalStockCount = bundle.stockItems.length;
+    final totalStockPages = max(1, (totalStockCount / _stockPageSize).ceil());
+    final safeStockPage = _stockPage > totalStockPages ? totalStockPages : _stockPage;
+    final startIndex = (safeStockPage - 1) * _stockPageSize;
+    final paginatedStock = bundle.stockItems.skip(startIndex).take(_stockPageSize).toList();
 
     return Column(
       children: [
@@ -1017,18 +1063,17 @@ class _VehiclesReportScreenState extends ConsumerState<VehiclesReportScreen>
                   _buildInlineStat(
                     label: 'Total Capital Tied Up',
                     value: CurrencyUtils.format(bundle.stockSummary.totalInvested),
-                  ),
-                  const SizedBox(width: 16),
-                  _buildInlineStat(
-                    label: 'Listed Expected Realization',
-                    value: CurrencyUtils.format(bundle.stockSummary.totalExpectedValue),
-                  ),
-                  const SizedBox(width: 16),
-                  _buildInlineStat(
-                    label: 'Projected Potential Profit',
-                    value: CurrencyUtils.format(bundle.stockSummary.projectedProfit),
-                    color: AppColors.profit,
                     bold: true,
+                  ),
+                  const SizedBox(width: 16),
+                  _buildInlineStat(
+                    label: '2 Wheeler Stock',
+                    value: '${bundle.stockSummary.twoWheelerCount} Units',
+                  ),
+                  const SizedBox(width: 16),
+                  _buildInlineStat(
+                    label: '4 Wheeler Stock',
+                    value: '${bundle.stockSummary.fourWheelerCount} Units',
                   ),
                 ],
               ),
@@ -1051,8 +1096,6 @@ class _VehiclesReportScreenState extends ConsumerState<VehiclesReportScreen>
               Expanded(flex: 2, child: Text('PURCHASE PRICE', style: _tableHeaderStyle)),
               Expanded(flex: 2, child: Text('CURRENT EXPENSES', style: _tableHeaderStyle)),
               Expanded(flex: 2, child: Text('TOTAL INVESTED', style: _tableHeaderStyle)),
-              Expanded(flex: 2, child: Text('EXPECTED PRICE', style: _tableHeaderStyle)),
-              Expanded(flex: 2, child: Text('PROJECTED PROFIT', style: _tableHeaderStyle)),
             ],
           ),
         ),
@@ -1060,10 +1103,10 @@ class _VehiclesReportScreenState extends ConsumerState<VehiclesReportScreen>
         // Stock List
         Expanded(
           child: ListView.separated(
-            itemCount: bundle.stockItems.length,
+            itemCount: paginatedStock.length,
             separatorBuilder: (ctx, i) => const Divider(height: 1, color: AppColors.border),
             itemBuilder: (context, index) {
-              final item = bundle.stockItems[index];
+              final item = paginatedStock[index];
               final isAging = item.daysInStock > 30;
 
               return Padding(
@@ -1186,64 +1229,82 @@ class _VehiclesReportScreenState extends ConsumerState<VehiclesReportScreen>
                         ),
                       ),
                     ),
-
-                    // Expected Sale Price
-                    Expanded(
-                      flex: 2,
-                      child: Text(
-                        item.expectedSalePrice > 0
-                            ? CurrencyUtils.format(item.expectedSalePrice)
-                            : 'Not Listed',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          color: item.expectedSalePrice > 0
-                              ? AppColors.primaryText
-                              : AppColors.secondaryText,
-                        ),
-                      ),
-                    ),
-
-                    // Projected Profit
-                    Expanded(
-                      flex: 2,
-                      child: item.expectedSalePrice > 0
-                          ? Row(
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
-                                  decoration: BoxDecoration(
-                                    color: (item.projectedProfit >= 0
-                                            ? AppColors.profit
-                                            : AppColors.loss)
-                                        .withValues(alpha: 0.12),
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
-                                  child: Text(
-                                    '${item.projectedProfit >= 0 ? '+' : ''}${CurrencyUtils.format(item.projectedProfit)}',
-                                    style: TextStyle(
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.bold,
-                                      color: item.projectedProfit >= 0
-                                          ? AppColors.profit
-                                          : AppColors.loss,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            )
-                          : const Text(
-                              '-',
-                              style: TextStyle(color: AppColors.secondaryText),
-                            ),
-                    ),
                   ],
                 ),
               );
             },
           ),
         ),
+        if (totalStockCount > _stockPageSize)
+          _buildTablePaginationBar(
+            currentPage: safeStockPage,
+            totalCount: totalStockCount,
+            pageSize: _stockPageSize,
+            onPageChanged: (newPage) => setState(() => _stockPage = newPage),
+          ),
       ],
+    );
+  }
+
+  Widget _buildTablePaginationBar({
+    required int currentPage,
+    required int totalCount,
+    required int pageSize,
+    required ValueChanged<int> onPageChanged,
+  }) {
+    final totalPages = max(1, (totalCount / pageSize).ceil());
+    final startItem = totalCount == 0 ? 0 : (currentPage - 1) * pageSize + 1;
+    final endItem = min(currentPage * pageSize, totalCount);
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+      decoration: const BoxDecoration(
+        color: AppColors.surface,
+        border: Border(top: BorderSide(color: AppColors.border)),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            'Showing $startItem–$endItem of $totalCount items',
+            style: const TextStyle(
+              fontSize: 12,
+              color: AppColors.secondaryText,
+            ),
+          ),
+          Row(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.chevron_left, size: 20),
+                onPressed: currentPage > 1 ? () => onPageChanged(currentPage - 1) : null,
+                tooltip: 'Previous page',
+                visualDensity: VisualDensity.compact,
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Text(
+                  'Page $currentPage of $totalPages',
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primary,
+                  ),
+                ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.chevron_right, size: 20),
+                onPressed: currentPage < totalPages ? () => onPageChanged(currentPage + 1) : null,
+                tooltip: 'Next page',
+                visualDensity: VisualDensity.compact,
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 

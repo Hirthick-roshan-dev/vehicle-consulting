@@ -164,10 +164,4 @@ class ReportRepository {
     );
     return ProfitSummary.fromItems(items);
   }
-
-  /// Convenience method for calculating total all-time profit summary
-  Future<ProfitSummary> getOverallProfitSummary({VehicleType? filterType}) async {
-    final items = await getSalesItems(filterType: filterType);
-    return ProfitSummary.fromItems(items);
-  }
 }

@@ -10,6 +10,7 @@ class VehicleSaleModel {
   final bool isEmi;
   final String? financeName;
   final double totalAmount;
+  final double documentCharges;
   final String? notes;
   final String createdAt;
   final String updatedAt;
@@ -24,6 +25,7 @@ class VehicleSaleModel {
     required this.isEmi,
     this.financeName,
     required this.totalAmount,
+    this.documentCharges = 0.0,
     this.notes,
     required this.createdAt,
     required this.updatedAt,
@@ -40,6 +42,7 @@ class VehicleSaleModel {
       isEmi: (map['is_emi'] as int) == 1,
       financeName: map['finance_name'] as String?,
       totalAmount: (map['total_amount'] as num).toDouble(),
+      documentCharges: (map['document_charges'] as num?)?.toDouble() ?? 0.0,
       notes: map['notes'] as String?,
       createdAt: map['created_at'] as String,
       updatedAt: map['updated_at'] as String,
@@ -57,6 +60,7 @@ class VehicleSaleModel {
       'is_emi': isEmi ? 1 : 0,
       'finance_name': financeName,
       'total_amount': totalAmount,
+      'document_charges': documentCharges,
       'notes': notes,
       'created_at': createdAt,
       'updated_at': updatedAt,

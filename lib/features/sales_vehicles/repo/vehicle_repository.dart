@@ -36,17 +36,18 @@ class VehicleRepository {
           whereClauses.add('status = ?');
           whereArgs.add(filterStatus.code);
         } else {
-          whereClauses.add('status IN (?, ?)');
+          // Completed module: show fully completed vehicles only
+          whereClauses.add('status = ?');
           whereArgs.add(VehicleStatus.completed.code);
-          whereArgs.add(VehicleStatus.partialPayment.code);
         }
       } else if (filterStatus != null) {
         whereClauses.add('status = ?');
         whereArgs.add(filterStatus.code);
       } else {
-        // Sales catalog view: show available inventory only
-        whereClauses.add('status = ?');
+        // Sales catalog view: show available AND partial payment vehicles
+        whereClauses.add('status IN (?, ?)');
         whereArgs.add(VehicleStatus.available.code);
+        whereArgs.add(VehicleStatus.partialPayment.code);
       }
 
       if (filterType != null) {
@@ -98,16 +99,18 @@ class VehicleRepository {
           whereClauses.add('status = ?');
           whereArgs.add(filterStatus.code);
         } else {
-          whereClauses.add('status IN (?, ?)');
+          // Completed module: show fully completed vehicles only
+          whereClauses.add('status = ?');
           whereArgs.add(VehicleStatus.completed.code);
-          whereArgs.add(VehicleStatus.partialPayment.code);
         }
       } else if (filterStatus != null) {
         whereClauses.add('status = ?');
         whereArgs.add(filterStatus.code);
       } else {
-        whereClauses.add('status = ?');
+        // Sales catalog view: show available AND partial payment vehicles
+        whereClauses.add('status IN (?, ?)');
         whereArgs.add(VehicleStatus.available.code);
+        whereArgs.add(VehicleStatus.partialPayment.code);
       }
 
       if (filterType != null) {
