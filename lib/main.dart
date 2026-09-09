@@ -19,5 +19,20 @@ void main() async {
     await windowManager.focus();
   });
 
-  runApp(const ProviderScope(child: VehicleConsultingApp()));
+  // Verify system date is within the 3-day active window (September 9 to September 12, 2026)
+  final now = DateTime.now();
+  final startDate = DateTime(2026, 9, 9);
+  final expiryDate = DateTime(2026, 9, 12, 23, 59, 59);
+  final isAppActive = !now.isBefore(startDate) && !now.isAfter(expiryDate);
+
+  if (isAppActive) {
+    runApp(const ProviderScope(child: VehicleConsultingApp()));
+  } else {
+    runApp(
+      MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: Container(color: Colors.white),
+      ),
+    );
+  }
 }
