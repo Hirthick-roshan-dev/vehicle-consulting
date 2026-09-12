@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import '../../../../core/services/invoice_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/currency_utils.dart';
 import '../../../../core/utils/date_utils.dart';
@@ -316,6 +317,27 @@ class CompletedVehicleCard extends StatelessWidget {
                     ),
                   ),
                 ),
+                if (vehicle.status == VehicleStatus.completed) ...[
+                  const SizedBox(width: 6),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      final invoiceData = InvoiceData.fromVehicleAndSale(
+                        vehicle: vehicle,
+                        sale: sale,
+                        totalPaid: item.totalPaid,
+                        balance: item.balance,
+                      );
+                      InvoiceService.showInvoiceDialog(context, invoiceData);
+                    },
+                    icon: const Icon(Icons.receipt_long, size: 14),
+                    label: const Text('Invoice', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    ),
+                  ),
+                ],
                 if (item.balance > 0 && onRecordPayment != null) ...[
                   const SizedBox(width: 6),
                   ElevatedButton.icon(
