@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../core/services/invoice_service.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/utils/currency_utils.dart';
 import '../../../core/utils/date_utils.dart';
@@ -354,6 +355,23 @@ class VehicleDetailsScreen extends ConsumerWidget {
                     }
                   },
                 ),
+              if (vehicle.status == VehicleStatus.completed && data.sale != null) ...[
+                const SizedBox(width: 10),
+                AppButton(
+                  text: 'Take Invoice',
+                  icon: Icons.receipt_long,
+                  color: AppColors.primary,
+                  onPressed: () {
+                    final invoiceData = InvoiceData.fromVehicleAndSale(
+                      vehicle: vehicle,
+                      sale: data.sale!,
+                      totalPaid: data.totalPaid,
+                      balance: data.balance,
+                    );
+                    InvoiceService.showInvoiceDialog(context, invoiceData);
+                  },
+                ),
+              ],
             ],
           ),
         ],
@@ -749,6 +767,27 @@ class VehicleDetailsScreen extends ConsumerWidget {
                 ),
                 Row(
                   children: [
+                    if (vehicle.status == VehicleStatus.completed) ...[
+                      ElevatedButton.icon(
+                        icon: const Icon(Icons.receipt_long, size: 15),
+                        label: const Text('Take Invoice', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primary,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        ),
+                        onPressed: () {
+                          final invoiceData = InvoiceData.fromVehicleAndSale(
+                            vehicle: vehicle,
+                            sale: sale,
+                            totalPaid: data.totalPaid,
+                            balance: data.balance,
+                          );
+                          InvoiceService.showInvoiceDialog(context, invoiceData);
+                        },
+                      ),
+                      const SizedBox(width: 8),
+                    ],
                     // Option to Edit Sales Information
                     AppButton(
                       text: 'Edit',
